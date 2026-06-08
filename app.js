@@ -12,7 +12,7 @@ const experiences = [
     sponsored: true,
     x: 58,
     y: 54,
-    image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/savanna-sunset.jpg",
     guide: "Amara K.",
     languages: "English, Swahili, Maa",
     includes: ["Private guide", "Park route planning", "Picnic lunch", "Binoculars"],
@@ -33,7 +33,7 @@ const experiences = [
     sponsored: false,
     x: 43,
     y: 28,
-    image: "https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/marrakech-medina.jpg",
     guide: "Youssef B.",
     languages: "Arabic, French, English",
     includes: ["Licensed city guide", "Tea tasting", "Street food stops"],
@@ -54,7 +54,7 @@ const experiences = [
     sponsored: true,
     x: 35,
     y: 45,
-    image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/zanzibar-beach.jpg",
     guide: "Fatou D.",
     languages: "Wolof, French, English",
     includes: ["Market walk", "Cooking class", "Shared meal", "Recipe notes"],
@@ -75,7 +75,7 @@ const experiences = [
     sponsored: false,
     x: 43,
     y: 52,
-    image: "https://images.unsplash.com/photo-1580881977123-7e04be95a84b?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/victoria-falls.jpg",
     guide: "Kwame A.",
     languages: "English, Twi, Ga",
     includes: ["Museum entry", "Local guide", "Music history route"],
@@ -96,7 +96,7 @@ const experiences = [
     sponsored: false,
     x: 56,
     y: 58,
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/okavango-delta.jpg",
     guide: "Aline N.",
     languages: "Kinyarwanda, English, French",
     includes: ["Conservation briefing", "Village visit", "Trail snacks"],
@@ -117,7 +117,7 @@ const experiences = [
     sponsored: true,
     x: 51,
     y: 83,
-    image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1200&q=82",
+    image: "assets/scenes/cape-town-coast.jpg",
     guide: "Naledi M.",
     languages: "English, isiXhosa, Afrikaans",
     includes: ["Photo coaching", "Route guide", "Safety briefing"],
@@ -209,10 +209,14 @@ function renderHome() {
   app.innerHTML = `
     <section class="hero">
       <div class="hero-content">
-        <img class="hero-logo" src="assets/konian-logo-main.png" alt="Konian - Your path to falling in love with Africa">
-        <div class="eyebrow">Your path to falling in love with Africa</div>
+        <img class="hero-logo" src="assets/konian-lockup.png" alt="Konian - Your path to falling in love with Africa">
+        <div class="eyebrow">54 nations - one endless road</div>
         <h1>Konian</h1>
-        <p>Your path to falling in love with Africa. Discover verified guides, cultural experiences, hidden places, and intelligent itineraries across the continent.</p>
+        <p>Verified local guides, hidden cultural moments and AI-planned journeys across all 54 nations - the continent, as only locals can show you.</p>
+        <div class="hero-search" role="search">
+          <input type="search" placeholder="Where to? Kenya, Marrakech, Serengeti..." aria-label="Search destinations">
+          <a class="btn" href="#/discover">Explore</a>
+        </div>
         <div class="hero-actions">
           <a class="btn" href="#/plan">Plan my trip</a>
           <a class="btn secondary" href="#/discover">Explore experiences</a>
@@ -264,6 +268,30 @@ function renderHome() {
       </div>
       <div class="card-grid">${experiences.slice(0, 3).map(card).join("")}</div>
     </section>
+    <section class="section">
+      <div class="section-title centered">
+        <div class="eyebrow">How Konian works</div>
+        <h2>From overwhelmed to on your way</h2>
+      </div>
+      <div class="steps-grid">
+        <article class="step-card"><span>01</span><h3>Tell us your dream</h3><p class="muted">Share where, how long, your budget and what moves you. Konian shapes the first route.</p></article>
+        <article class="step-card"><span>02</span><h3>Get a living itinerary</h3><p class="muted">A day-by-day plan with verified guides, hidden cultural moments and honest costs.</p></article>
+        <article class="step-card"><span>03</span><h3>Book with confidence</h3><p class="muted">Every guide is verified, every review is aggregated, and every booking is tracked in one place.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="guide-band">
+        <div class="eyebrow">For local guides</div>
+        <h2>Your knowledge is the experience.</h2>
+        <p>A professional storefront, booking calendar and analytics - built Africa-first, at a 10% commission, not 25%.</p>
+        <a class="btn" href="#/dashboard">Become a Konian guide</a>
+      </div>
+    </section>
+    <footer class="footer">
+      <strong>Konian</strong>
+      <span>Your path to falling in love with Africa</span>
+      <small>54 nations - one endless road</small>
+    </footer>
   `;
   bindSaveButtons();
 }

@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "./assets/konian-app-icon.png",
+      "src": "./assets/app-icon-dark.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

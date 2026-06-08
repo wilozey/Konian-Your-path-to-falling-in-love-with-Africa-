@@ -5,9 +5,16 @@ const CORE_ASSETS = [
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./assets/konian-app-icon.png",
-  "./assets/konian-logo-main.png",
-  "./assets/konian-logo-compact.png"
+  "./assets/app-icon-dark.png",
+  "./assets/app-icon-cream.png",
+  "./assets/app-icon-bronze.png",
+  "./assets/konian-lockup.png",
+  "./assets/konian-mark.png",
+  "./assets/konian-mark-transparent.png",
+  "./assets/scenes/savanna-sunset.jpg",
+  "./assets/scenes/marrakech-medina.jpg",
+  "./assets/scenes/serengeti-plains.jpg",
+  "./assets/scenes/cape-town-coast.jpg"
 ];
 
 self.addEventListener("install", (event) => {

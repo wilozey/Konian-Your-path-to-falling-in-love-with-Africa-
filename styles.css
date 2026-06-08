@@ -37,7 +37,7 @@ body::before {
   z-index: -1;
   background:
     linear-gradient(180deg, rgba(255, 250, 242, 0.74), rgba(255, 250, 242, 0.96)),
-    url("https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=82") center/cover;
+    url("assets/scenes/savanna-sunset.jpg") center/cover;
 }
 
 a {
@@ -184,7 +184,7 @@ button {
   color: white;
   background:
     linear-gradient(180deg, rgba(9, 21, 15, 0.12), rgba(9, 21, 15, 0.78)),
-    url("https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=2200&q=86") center/cover;
+    url("assets/scenes/savanna-sunset.jpg") center/cover;
 }
 
 .mobile-quick-actions {
@@ -512,7 +512,7 @@ label {
   overflow: hidden;
   background:
     linear-gradient(rgba(217, 238, 242, 0.48), rgba(217, 238, 242, 0.18)),
-    url("https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=1900&q=82") center/cover;
+    url("assets/scenes/sahara-dunes.jpg") center/cover;
 }
 
 .pin {
@@ -969,7 +969,7 @@ body {
 body::before {
   background:
     linear-gradient(180deg, rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.94)),
-    url("https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=2200&q=82") center/cover;
+    url("assets/scenes/savanna-sunset.jpg") center/cover;
 }
 
 h1,
@@ -1070,7 +1070,7 @@ textarea {
   min-height: calc(100svh - 72px);
   background:
     linear-gradient(180deg, rgba(10, 10, 10, 0.05), rgba(10, 10, 10, 0.9)),
-    url("https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=2200&q=86") center/cover;
+    url("assets/scenes/savanna-sunset.jpg") center/cover;
 }
 
 .hero-content {
@@ -1181,7 +1181,7 @@ textarea {
   border-left: 1px solid var(--line);
   background:
     linear-gradient(rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.72)),
-    url("https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=1900&q=82") center/cover;
+    url("assets/scenes/sahara-dunes.jpg") center/cover;
 }
 
 .pin {
@@ -1220,6 +1220,142 @@ textarea {
   border-color: rgba(248, 245, 239, 0.24);
   background: linear-gradient(145deg, #f8e5a1, #d4af37 55%, #9a642c);
   box-shadow: 0 12px 28px rgba(212, 175, 55, 0.22);
+}
+
+.hero-search {
+  max-width: 620px;
+  display: flex;
+  gap: 10px;
+  margin: 28px 0 12px;
+  padding: 7px;
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  border-radius: 999px;
+  background: rgba(248, 245, 239, 0.94);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.hero-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #0a0a0a;
+}
+
+.hero-search input::placeholder {
+  color: #776f63;
+}
+
+.centered {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.step-card {
+  min-height: 260px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(248, 245, 239, 0.045), rgba(248, 245, 239, 0.015)),
+    rgba(20, 17, 13, 0.9);
+  box-shadow: var(--shadow);
+}
+
+.step-card span {
+  color: var(--forest);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.12em;
+}
+
+.step-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.guide-band {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(34px, 6vw, 76px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, 0.95), rgba(10, 10, 10, 0.62)),
+    url("assets/scenes/marrakech-medina.jpg") center/cover;
+  box-shadow: var(--shadow);
+}
+
+.guide-band h2 {
+  max-width: 640px;
+  margin: 12px 0 12px;
+  font-size: clamp(2rem, 5vw, 4.6rem);
+  line-height: 1;
+}
+
+.guide-band p {
+  max-width: 560px;
+  color: rgba(248, 245, 239, 0.82);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.55;
+}
+
+.footer {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding: 42px 16px 120px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  background: #0a0a0a;
+  text-align: center;
+}
+
+.footer strong {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.footer span {
+  color: var(--forest);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+.footer small {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.card,
+.booking-card,
+.tier,
+.metric,
+.panel {
+  transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease;
+}
+
+.card:hover,
+.booking-card:hover,
+.tier:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(212, 175, 55, 0.08);
 }
 
 @media (max-width: 820px) {
@@ -1290,5 +1426,34 @@ textarea {
     display: grid;
     padding-top: 10px;
     background: rgba(10, 10, 10, 0.94);
+  }
+
+  .hero-search {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-radius: 14px;
+    padding: 10px;
+  }
+
+  .hero-search input {
+    min-height: 44px;
+    padding: 0 10px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-card {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .guide-band {
+    border-radius: 14px;
+  }
+
+  .footer {
+    padding-bottom: 108px;
   }
 }
