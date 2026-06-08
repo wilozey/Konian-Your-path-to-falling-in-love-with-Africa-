@@ -2,7 +2,7 @@
 
 **Your path to falling in love with Africa.**
 
-Konian is an Africa-first travel discovery and planning prototype inspired by the SafariConnect MVP documents. The name comes from the Konian surname meaning "Go and see" in Akan languages from Côte d'Ivoire.
+Konian is an Africa-first travel discovery and planning prototype built around one promise: your path to falling in love with Africa.
 
 ## MVP Included
 

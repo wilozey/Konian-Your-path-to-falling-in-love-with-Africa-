@@ -211,7 +211,7 @@ function renderHome() {
       <div class="hero-content">
         <div class="eyebrow">Your path to falling in love with Africa</div>
         <h1>Konian</h1>
-        <p>Konian means "Go and see" in Akan languages from Côte d'Ivoire. This Africa-first travel marketplace helps travellers discover verified guides, cultural experiences, hidden places, and intelligent itineraries across the continent.</p>
+        <p>Your path to falling in love with Africa. Discover verified guides, cultural experiences, hidden places, and intelligent itineraries across the continent.</p>
         <div class="hero-actions">
           <a class="btn" href="#/plan">Plan my trip</a>
           <a class="btn secondary" href="#/discover">Explore experiences</a>
