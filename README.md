@@ -6,6 +6,8 @@ Konian is an Africa-first travel discovery and planning prototype inspired by th
 
 ## MVP Included
 
+- Mobile-app-first interface with bottom tabs and touch-friendly screens
+- PWA manifest and offline cache for installable browser testing
 - Premium landing page for Konian
 - Searchable discovery feed with country, category, and price filters
 - Experience detail pages with trust signals and booking flow
@@ -19,4 +21,8 @@ Konian is an Africa-first travel discovery and planning prototype inspired by th
 
 Open `index.html` in a browser. The app is a lightweight static MVP, so it does not require a backend or dependency install.
 
-For a local server, you can use any static server from this folder.
+For installable PWA behaviour, run the local server and open the localhost URL:
+
+```bash
+npm start
+```

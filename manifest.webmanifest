@@ -1,0 +1,18 @@
+{
+  "name": "Konian",
+  "short_name": "Konian",
+  "description": "Your path to falling in love with Africa.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fffaf2",
+  "theme_color": "#1f5b45",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

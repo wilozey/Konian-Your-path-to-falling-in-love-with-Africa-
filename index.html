@@ -8,10 +8,19 @@
       name="description"
       content="Konian is an Africa-first travel discovery and planning marketplace for travellers, local guides, and cultural businesses."
     />
+    <meta name="theme-color" content="#1f5b45" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Konian" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="app-status" aria-hidden="true">
+      <span>9:41</span>
+      <span>Konian</span>
+      <span>5G</span>
+    </div>
     <header class="topbar">
       <a class="brand" href="#/">
         <span class="brand-mark">K</span>
@@ -28,14 +37,42 @@
         <a href="#/pricing">Pricing</a>
       </nav>
       <a class="profile-chip" href="#/profile" aria-label="Open profile">
-        <span class="crown">♛</span>
+        <span class="crown">Premium</span>
         <span>Explorer</span>
       </a>
     </header>
 
     <main id="app" tabindex="-1"></main>
 
+    <nav class="bottom-tabs" aria-label="Mobile app navigation">
+      <a href="#/" data-nav="">
+        <span>⌂</span>
+        <small>Home</small>
+      </a>
+      <a href="#/discover" data-nav="discover">
+        <span>⌕</span>
+        <small>Explore</small>
+      </a>
+      <a href="#/plan" data-nav="plan">
+        <span>✦</span>
+        <small>Plan</small>
+      </a>
+      <a href="#/bookings" data-nav="bookings">
+        <span>▣</span>
+        <small>Trips</small>
+      </a>
+      <a href="#/profile" data-nav="profile">
+        <span>●</span>
+        <small>Me</small>
+      </a>
+    </nav>
+
     <template id="icon-star">★</template>
     <script src="app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        navigator.serviceWorker.register("./sw.js");
+      }
+    </script>
   </body>
 </html>

@@ -164,6 +164,9 @@ function route() {
     pricing: renderPricing
   };
   (routes[current] || renderHome)();
+  document.querySelectorAll("[data-nav]").forEach((link) => {
+    link.classList.toggle("active", link.dataset.nav === current);
+  });
   app.focus({ preventScroll: true });
 }
 
@@ -220,6 +223,12 @@ function renderHome() {
       <div class="stat"><strong>2.8k+</strong><span>Curated experiences</span></div>
       <div class="stat"><strong>50k+</strong><span>Traveller community</span></div>
       <div class="stat"><strong>10%</strong><span>Guide-friendly commission</span></div>
+    </section>
+    <section class="mobile-quick-actions" aria-label="Quick actions">
+      <a href="#/discover"><strong>⌕</strong><span>Explore</span></a>
+      <a href="#/plan"><strong>✦</strong><span>AI plan</span></a>
+      <a href="#/map"><strong>◇</strong><span>Map</span></a>
+      <a href="#/dashboard"><strong>▤</strong><span>Guides</span></a>
     </section>
     <section class="section">
       <div class="section-title">

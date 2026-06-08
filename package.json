@@ -5,6 +5,6 @@
   "description": "Konian - your path to falling in love with Africa.",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check server.js"
+    "check": "node --check app.js && node --check server.js && node --check sw.js"
   }
 }
