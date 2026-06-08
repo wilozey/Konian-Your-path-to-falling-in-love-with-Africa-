@@ -355,15 +355,27 @@ function renderPlanner() {
     <section class="section">
       <div class="section-title">
         <h2>AI Trip Planner</h2>
-        <p>Generate a day-by-day Africa itinerary from your destination, budget, interests, and travel rhythm.</p>
+        <p>Plan from your starting point to your destination, then let Konian rank the trip around what matters most.</p>
       </div>
       <div class="content-grid">
         <form class="panel" id="plannerForm">
           <div class="form-grid">
             <label>Destination<input name="destination" value="Ghana and Côte d'Ivoire" required></label>
+            <label>Starting location<input name="origin" value="London, United Kingdom" required></label>
             <label>Days<input name="days" type="number" min="2" max="21" value="7" required></label>
-            <label>Budget<select name="budget"><option>Budget</option><option selected>Mid-range</option><option>Luxury</option></select></label>
+            <label>Total budget<input name="totalBudget" type="number" min="150" step="50" value="1800" required></label>
+            <label>Budget tier<select name="budget"><option>Budget</option><option selected>Mid-range</option><option>Luxury</option></select></label>
             <label>Style<select name="style"><option>Relaxed</option><option selected>Balanced</option><option>Packed</option></select></label>
+          </div>
+          <h3>Transport throughout</h3>
+          <div class="option-grid">
+            ${["Flight", "Train", "Coach", "Private driver", "Rental car", "Ferry", "Domestic flight", "Walking"].map((mode) => `<label><input type="checkbox" name="transport" value="${mode}" ${["Flight", "Private driver", "Domestic flight", "Walking"].includes(mode) ? "checked" : ""}>${mode}</label>`).join("")}
+          </div>
+          <h3>Design priority</h3>
+          <div class="form-grid">
+            <label>Most important<select name="priority1"><option selected>Budget</option><option>Country</option><option>Transport comfort</option><option>Time</option><option>Culture</option><option>Safety</option></select></label>
+            <label>Second<select name="priority2"><option>Budget</option><option selected>Country</option><option>Transport comfort</option><option>Time</option><option>Culture</option><option>Safety</option></select></label>
+            <label>Third<select name="priority3"><option>Budget</option><option>Country</option><option selected>Culture</option><option>Transport comfort</option><option>Time</option><option>Safety</option></select></label>
           </div>
           <h3>Interests</h3>
           <div class="option-grid">
@@ -381,19 +393,74 @@ function renderPlanner() {
   document.getElementById("plannerForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
+    const origin = data.get("origin");
     const destination = data.get("destination");
     const days = Math.min(Number(data.get("days")), 10);
+    const totalBudget = Number(data.get("totalBudget"));
+    const dailyBudget = Math.max(25, Math.round(totalBudget / days));
     const interests = data.getAll("interests");
+    const transport = data.getAll("transport");
+    const priorities = [data.get("priority1"), data.get("priority2"), data.get("priority3")];
+    const transportPlan = buildTransportPlan(transport, data.get("budget"), totalBudget, priorities);
+    const priorityAdvice = buildPriorityAdvice(priorities, totalBudget, destination);
     const plan = Array.from({ length: days }, (_, index) => {
       const focus = interests[index % interests.length] || "Culture";
-      return `<article class="day-card"><h3>Day ${index + 1}: ${focus} in ${destination}</h3><p><strong>Morning:</strong> Local orientation with a verified guide and neighbourhood context.</p><p><strong>Afternoon:</strong> Bookable ${focus.toLowerCase()} experience with transport tips and trust signals.</p><p><strong>Evening:</strong> Recommended meal, music, or slow walk matched to a ${data.get("style").toLowerCase()} pace.</p><p class="muted">Estimated daily spend: ${money.format(data.get("budget") === "Luxury" ? 260 : data.get("budget") === "Budget" ? 75 : 145)}</p></article>`;
+      const dailyTransport = transportPlan[index % transportPlan.length];
+      const spend = priorities[0] === "Budget" ? Math.min(dailyBudget, dailyTransport.dailyCap) : dailyTransport.dailyCap;
+      return `<article class="day-card"><h3>Day ${index + 1}: ${focus} in ${destination}</h3><p><strong>Morning:</strong> ${dailyTransport.morning} from the best local base.</p><p><strong>Afternoon:</strong> Bookable ${focus.toLowerCase()} experience with verified guide notes and route timing.</p><p><strong>Evening:</strong> Recommended meal, music, or slow walk matched to a ${data.get("style").toLowerCase()} pace.</p><p class="muted">Transport: ${dailyTransport.mode} - estimated day cost ${money.format(spend)}</p></article>`;
     }).join("");
-    document.getElementById("itinerary").innerHTML = `<h2>${days}-day ${destination} plan</h2><div class="chips">${interests.map((i) => `<span class="chip">${i}</span>`).join("")}</div><div style="display:grid;gap:12px;margin-top:14px">${plan}</div><button class="btn light" id="savePlan" style="margin-top:14px">Save itinerary</button>`;
+    document.getElementById("itinerary").innerHTML = `<h2>${days}-day route to ${destination}</h2><div class="route-summary"><div><span class="muted">From</span><strong>${origin}</strong></div><div><span class="muted">Budget</span><strong>${money.format(totalBudget)}</strong></div><div><span class="muted">Priority</span><strong>${priorities.join(" > ")}</strong></div></div><div class="chips">${interests.map((i) => `<span class="chip">${i}</span>`).join("")}</div><div class="transport-list">${transportPlan.map((item) => `<article><strong>${item.mode}</strong><span>${item.reason}</span><em>${money.format(item.estimate)}</em></article>`).join("")}</div><article class="day-card"><h3>Planning logic</h3><p>${priorityAdvice}</p></article><div style="display:grid;gap:12px;margin-top:14px">${plan}</div><button class="btn light" id="savePlan" style="margin-top:14px">Save itinerary</button>`;
     document.getElementById("savePlan").addEventListener("click", () => {
-      setStore("konianPlans", [{ destination, days, interests, created: new Date().toLocaleDateString() }, ...store("konianPlans", [])]);
+      setStore("konianPlans", [{ origin, destination, days, totalBudget, priorities, interests, created: new Date().toLocaleDateString() }, ...store("konianPlans", [])]);
       document.getElementById("savePlan").textContent = "Saved";
     });
   });
+}
+
+function buildTransportPlan(selectedModes, budgetTier, totalBudget, priorities) {
+  const modes = selectedModes.length ? selectedModes : ["Flight", "Private driver", "Walking"];
+  const baseCosts = {
+    Flight: 520,
+    Train: 80,
+    Coach: 45,
+    "Private driver": 120,
+    "Rental car": 95,
+    Ferry: 35,
+    "Domestic flight": 180,
+    Walking: 0
+  };
+  const fastModes = ["Flight", "Domestic flight", "Private driver", "Train", "Rental car", "Coach", "Ferry", "Walking"];
+  const comfortModes = ["Flight", "Private driver", "Domestic flight", "Rental car", "Train", "Ferry", "Coach", "Walking"];
+  const multiplier = budgetTier === "Luxury" ? 1.45 : budgetTier === "Budget" ? 0.72 : 1;
+  const ordered = [...modes].sort((a, b) => {
+    if (priorities[0] === "Budget") return (baseCosts[a] || 50) - (baseCosts[b] || 50);
+    if (priorities[0] === "Transport comfort") return comfortModes.indexOf(a) - comfortModes.indexOf(b);
+    if (priorities[0] === "Time") return fastModes.indexOf(a) - fastModes.indexOf(b);
+    return a.localeCompare(b);
+  });
+
+  return ordered.slice(0, Math.max(3, Math.min(ordered.length, 5))).map((mode) => {
+    const estimate = Math.round((baseCosts[mode] || 60) * multiplier);
+    return {
+      mode,
+      estimate,
+      dailyCap: Math.max(60, Math.round((totalBudget - estimate) / 4)),
+      morning: mode === "Walking" ? "Walkable local discovery" : `Use ${mode.toLowerCase()} for this leg`,
+      reason: priorities[0] === "Budget" ? "protects the budget first" : priorities[0] === "Time" ? "saves travel time" : priorities[0] === "Transport comfort" ? "keeps the journey comfortable" : "fits your route priorities"
+    };
+  });
+}
+
+function buildPriorityAdvice(priorities, totalBudget, destination) {
+  const first = priorities[0].toLowerCase();
+  const second = priorities[1].toLowerCase();
+  if (priorities[0] === "Budget") {
+    return `Konian keeps the route cost-led first, then uses ${second} to decide where to spend more. For ${destination}, the plan protects the ${money.format(totalBudget)} ceiling before adding premium experiences.`;
+  }
+  if (priorities[0] === "Country") {
+    return `Konian anchors the journey around the countries you named first, then lets ${second} shape the pace, transport, and daily spend.`;
+  }
+  return `Konian ranks ${first} first, then ${second}, so the itinerary chooses transport, cities, and experiences in that order.`;
 }
 
 function renderMap() {
