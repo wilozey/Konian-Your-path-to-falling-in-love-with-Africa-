@@ -7,6 +7,7 @@ Konian is an Africa-first travel discovery and planning prototype built around o
 ## MVP Included
 
 - Mobile-app-first interface with bottom tabs and touch-friendly screens
+- Luxury black, gold, ivory, and bronze visual direction inspired by the Konian logo board
 - PWA manifest and offline cache for installable browser testing
 - Premium landing page for Konian
 - Searchable discovery feed with country, category, and price filters

@@ -1,11 +1,13 @@
-const CACHE_NAME = "konian-mobile-v1";
+const CACHE_NAME = "konian-luxury-v2";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./icon.svg"
+  "./assets/konian-app-icon.png",
+  "./assets/konian-logo-main.png",
+  "./assets/konian-logo-compact.png"
 ];
 
 self.addEventListener("install", (event) => {

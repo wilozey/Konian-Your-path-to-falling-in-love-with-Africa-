@@ -182,7 +182,7 @@ function card(item) {
         <h3>${item.title}</h3>
         <p class="muted">${item.city}, ${item.country}</p>
         <div class="meta">
-          <span>★ ${item.rating} (${item.reviews})</span>
+          <span>Rating ${item.rating} (${item.reviews})</span>
           <strong>${money.format(item.price)}</strong>
         </div>
         <div class="actions" style="margin-top: 14px">
@@ -209,6 +209,7 @@ function renderHome() {
   app.innerHTML = `
     <section class="hero">
       <div class="hero-content">
+        <img class="hero-logo" src="assets/konian-logo-main.png" alt="Konian - Your path to falling in love with Africa">
         <div class="eyebrow">Your path to falling in love with Africa</div>
         <h1>Konian</h1>
         <p>Your path to falling in love with Africa. Discover verified guides, cultural experiences, hidden places, and intelligent itineraries across the continent.</p>
@@ -224,11 +225,18 @@ function renderHome() {
       <div class="stat"><strong>50k+</strong><span>Traveller community</span></div>
       <div class="stat"><strong>10%</strong><span>Guide-friendly commission</span></div>
     </section>
+    <section class="luxury-rail" aria-label="Konian brand values">
+      <span>Discovery</span>
+      <span>Authenticity</span>
+      <span>Culture</span>
+      <span>Luxury</span>
+      <span>Connection</span>
+    </section>
     <section class="mobile-quick-actions" aria-label="Quick actions">
-      <a href="#/discover"><strong>⌕</strong><span>Explore</span></a>
-      <a href="#/plan"><strong>✦</strong><span>AI plan</span></a>
-      <a href="#/map"><strong>◇</strong><span>Map</span></a>
-      <a href="#/dashboard"><strong>▤</strong><span>Guides</span></a>
+      <a href="#/discover"><strong>Find</strong><span>Explore</span></a>
+      <a href="#/plan"><strong>AI</strong><span>AI plan</span></a>
+      <a href="#/map"><strong>Map</strong><span>Map</span></a>
+      <a href="#/dashboard"><strong>Pro</strong><span>Guides</span></a>
     </section>
     <section class="section">
       <div class="section-title">
@@ -297,7 +305,7 @@ function renderExperience(id) {
       <div>
         <div class="chips"><span class="badge green">${item.category}</span>${item.sponsored ? '<span class="badge gold">Sponsored</span>' : ""}</div>
         <h1>${item.title}</h1>
-        <p>${item.city}, ${item.country} · ★ ${item.rating} from ${item.reviews} reviews</p>
+        <p>${item.city}, ${item.country} - Rating ${item.rating} from ${item.reviews} reviews</p>
       </div>
     </section>
     <section class="section content-grid">
