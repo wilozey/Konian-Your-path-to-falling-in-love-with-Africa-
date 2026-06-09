@@ -1,8 +1,8 @@
 # Konian
 
-**Your path to falling in love with Africa.**
+**Your path to falling in love with Côte d'Ivoire.**
 
-Konian is an Africa-first travel discovery and planning prototype built around one promise: your path to falling in love with Africa.
+Konian is a Côte d'Ivoire-first travel discovery and planning prototype built around one promise: your path to falling in love with Côte d'Ivoire. French and English are first-class languages; expansion to other countries is a long-term consideration.
 
 ## MVP Included
 

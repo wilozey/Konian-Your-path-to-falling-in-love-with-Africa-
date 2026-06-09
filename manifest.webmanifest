@@ -1,7 +1,7 @@
 {
   "name": "Konian",
   "short_name": "Konian",
-  "description": "Your path to falling in love with Africa.",
+  "description": "Your path to falling in love with Côte d'Ivoire.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fffaf2",
