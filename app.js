@@ -154,6 +154,59 @@ const destinations = [
 
 const app = document.querySelector("#app");
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const logoVariations = [
+  { id: "ivory-classic", name: "Ivory Classic", mood: "Soft premium", src: "assets/logo-variations/ivory-classic.png" },
+  { id: "bronze-pattern", name: "Bronze Pattern", mood: "Craft & heritage", src: "assets/logo-variations/bronze-pattern.png" },
+  { id: "emerald-classic", name: "Emerald Classic", mood: "Calm discovery", src: "assets/logo-variations/emerald-classic.png" },
+  { id: "sunset-savanna", name: "Sunset Savanna", mood: "Warm escape", src: "assets/logo-variations/sunset-savanna.png" },
+  { id: "ivory-africa", name: "Ivory Map", mood: "Quiet editorial", src: "assets/logo-variations/ivory-africa.png" },
+  { id: "onyx-ring", name: "Onyx Ring", mood: "Formal luxury", src: "assets/logo-variations/onyx-ring.png" },
+  { id: "onyx-seal", name: "Onyx Seal", mood: "Heritage seal", src: "assets/logo-variations/onyx-seal.png" },
+  { id: "onyx-brush", name: "Onyx Brush", mood: "Artistic luxury", src: "assets/logo-variations/onyx-brush.png" },
+  { id: "ivory-baobab", name: "Ivory Baobab", mood: "Culture & roots", src: "assets/logo-variations/ivory-baobab.png" },
+  { id: "emerald-compass", name: "Emerald Compass", mood: "Navigation", src: "assets/logo-variations/emerald-compass.png" },
+  { id: "onyx-africa-heart", name: "Onyx Heart", mood: "Minimal romance", src: "assets/logo-variations/onyx-africa-heart.png" },
+  { id: "bronze-sunset", name: "Bronze Sunset", mood: "Golden hour", src: "assets/logo-variations/bronze-sunset.png" },
+  { id: "onyx-kmark", name: "K Mark", mood: "Signature", src: "assets/logo-variations/onyx-kmark.png" },
+  { id: "emerald-minimal", name: "Emerald Minimal", mood: "Refined calm", src: "assets/logo-variations/emerald-minimal.png" },
+  { id: "onyx-spark", name: "Onyx Spark", mood: "AI planning", src: "assets/logo-variations/onyx-spark.png" },
+  { id: "ivory-watercolor", name: "Ivory Watercolor", mood: "Artful travel", src: "assets/logo-variations/ivory-watercolor.png" },
+  { id: "onyx-flight", name: "Onyx Flight", mood: "Journey", src: "assets/logo-variations/onyx-flight.png" },
+  { id: "onyx-classic", name: "Onyx Classic", mood: "Premium night", src: "assets/logo-variations/onyx-classic.png" },
+  { id: "app-bronze", name: "Bronze Icon", mood: "Product default", src: "assets/app-icon-bronze.png" }
+];
+
+function hashText(text) {
+  return [...text].reduce((hash, char) => ((hash << 5) - hash + char.charCodeAt(0)) | 0, 0);
+}
+
+function logoPeriodKey(mode, date = new Date()) {
+  if (mode === "weekly") {
+    const firstDay = new Date(date.getFullYear(), 0, 1);
+    const dayOfYear = Math.floor((date - firstDay) / 86400000) + 1;
+    return `${date.getFullYear()}-W${Math.ceil(dayOfYear / 7)}`;
+  }
+  if (mode === "random") {
+    return store("konianLogoRandomKey", String(Date.now()));
+  }
+  return date.toISOString().slice(0, 10);
+}
+
+function pickLogoVariation(mode = store("konianLogoMode", "daily")) {
+  const pinned = store("konianLogoPinned", "");
+  if (pinned) return logoVariations.find((logo) => logo.id === pinned) || logoVariations[0];
+  const key = logoPeriodKey(mode);
+  const index = Math.abs(hashText(`${mode}-${key}-konian`)) % logoVariations.length;
+  return logoVariations[index];
+}
+
+function applyLogoVariation(variation = pickLogoVariation()) {
+  document.querySelectorAll("[data-current-logo], .brand-logo").forEach((logo) => {
+    logo.src = variation.src;
+    logo.alt = `${variation.name} Konian logo`;
+  });
+  document.documentElement.style.setProperty("--active-logo-accent", variation.id.includes("bronze") ? "#b8864a" : variation.id.includes("ivory") ? "#d4af37" : "#8f5431");
+}
 
 function store(key, fallback) {
   try {
@@ -185,6 +238,7 @@ function route() {
   document.querySelectorAll("[data-nav]").forEach((link) => {
     link.classList.toggle("active", link.dataset.nav === current);
   });
+  applyLogoVariation();
   app.focus({ preventScroll: true });
 }
 
@@ -612,17 +666,26 @@ function renderProfile() {
           <a class="btn" href="#/pricing">Manage plan</a>
         </div>
         <div class="panel logo-variations">
-          <h2>Brand marks</h2>
-          <p class="muted">Ivory is used for quiet premium surfaces. Bronze is used for product identity, navigation, and warm editorial moments.</p>
+          <div class="logo-current">
+            <img data-current-logo src="${pickLogoVariation().src}" alt="Current Konian logo variation">
+            <div>
+              <h2>Logo mood rotation</h2>
+              <p class="muted">Konian can use a different logo mood daily or weekly. Random mode reshuffles from the full variation library.</p>
+            </div>
+          </div>
+          <div class="segmented logo-mode" style="margin: 16px 0">
+            <button data-logo-mode="daily">Daily</button>
+            <button data-logo-mode="weekly">Weekly</button>
+            <button data-logo-mode="random">Random</button>
+          </div>
           <div class="logo-choice-grid">
-            <button class="logo-choice active" data-logo="assets/app-icon-cream.png">
-              <img src="assets/app-icon-cream.png" alt="Ivory Konian logo variation">
-              <span>Ivory</span>
-            </button>
-            <button class="logo-choice" data-logo="assets/app-icon-bronze.png">
-              <img src="assets/app-icon-bronze.png" alt="Bronze Konian logo variation">
-              <span>Bronze</span>
-            </button>
+            ${logoVariations.map((logo) => `
+              <button class="logo-choice" data-logo-pick="${logo.id}">
+                <img src="${logo.src}" alt="${logo.name} Konian logo variation">
+                <span>${logo.name}</span>
+                <small>${logo.mood}</small>
+              </button>
+            `).join("")}
           </div>
         </div>
         <div class="panel">
@@ -638,14 +701,39 @@ function renderProfile() {
     </section>
   `;
   document.querySelector(".content-grid .panel .muted").textContent = "Founder profile preview - Côte d'Ivoire, UK - Building a Côte d'Ivoire-first travel operating system.";
-  document.querySelectorAll("[data-logo]").forEach((button) => {
+  updateLogoControls();
+  document.querySelectorAll("[data-logo-mode]").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll("[data-logo]").forEach((item) => item.classList.remove("active"));
-      button.classList.add("active");
-      const logo = document.querySelector(".brand-logo");
-      if (logo) logo.src = button.dataset.logo;
+      setStore("konianLogoMode", button.dataset.logoMode);
+      setStore("konianLogoPinned", "");
+      if (button.dataset.logoMode === "random") setStore("konianLogoRandomKey", String(Date.now()));
+      applyLogoVariation();
+      updateLogoControls();
     });
   });
+  document.querySelectorAll("[data-logo-pick]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setStore("konianLogoPinned", button.dataset.logoPick);
+      applyLogoVariation();
+      updateLogoControls();
+    });
+  });
+}
+
+function updateLogoControls() {
+  const mode = store("konianLogoMode", "daily");
+  const selected = pickLogoVariation(mode);
+  document.querySelectorAll("[data-logo-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.logoMode === mode);
+  });
+  document.querySelectorAll("[data-logo-pick]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.logoPick === selected.id);
+  });
+  const current = document.querySelector("[data-current-logo]");
+  if (current) {
+    current.src = selected.src;
+    current.alt = `${selected.name} Konian logo`;
+  }
 }
 
 function renderPricing() {

@@ -1650,16 +1650,38 @@ textarea {
   grid-column: 1 / -1;
 }
 
+.logo-current {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.logo-current img {
+  width: 96px;
+  height: 96px;
+  flex: none;
+  border-radius: 26px;
+  object-fit: cover;
+  border: 1px solid rgba(184, 134, 74, 0.34);
+  box-shadow: 0 18px 42px rgba(98, 65, 34, 0.18);
+}
+
+.logo-mode button.active {
+  color: #fffdf8;
+  border-color: rgba(184, 134, 74, 0.62);
+  background: linear-gradient(145deg, #d6b08a, #b8864a 55%, #7b4527);
+}
+
 .logo-choice-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
   gap: 14px;
   margin-top: 14px;
 }
 
 .logo-choice {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   justify-items: center;
   padding: 14px;
   border: 1px solid rgba(184, 134, 74, 0.34);
@@ -1673,11 +1695,19 @@ textarea {
 }
 
 .logo-choice img {
-  width: 82px;
-  height: 82px;
-  border-radius: 22px;
+  width: 92px;
+  height: 92px;
+  border-radius: 24px;
   object-fit: cover;
   box-shadow: 0 14px 30px rgba(64, 45, 20, 0.16);
+}
+
+.logo-choice small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .logo-choice.active {
