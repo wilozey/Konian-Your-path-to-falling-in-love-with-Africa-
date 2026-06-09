@@ -227,7 +227,10 @@ function renderHome() {
   app.innerHTML = `
     <section class="hero">
       <div class="hero-content">
-        <img class="hero-logo" src="assets/konian-lockup.png" alt="Konian - Your path to falling in love with Côte d'Ivoire">
+        <div class="hero-brand-pair" aria-label="Konian logo variations">
+          <img src="assets/app-icon-cream.png" alt="Ivory Konian logo">
+          <img src="assets/app-icon-bronze.png" alt="Bronze Konian logo">
+        </div>
         <div class="eyebrow">Côte d'Ivoire first - français & English</div>
         <h1>Konian</h1>
         <p>Your path to falling in love with Côte d'Ivoire. Verified bilingual guides, hidden cultural moments and AI-planned journeys from Abidjan to Grand-Bassam, Assinie, Yamoussoukro and Man.</p>
@@ -609,8 +612,8 @@ function renderProfile() {
           <a class="btn" href="#/pricing">Manage plan</a>
         </div>
         <div class="panel logo-variations">
-          <h2>Logo variations</h2>
-          <p class="muted">Choose the mark treatment that best fits the surface.</p>
+          <h2>Brand marks</h2>
+          <p class="muted">Ivory is used for quiet premium surfaces. Bronze is used for product identity, navigation, and warm editorial moments.</p>
           <div class="logo-choice-grid">
             <button class="logo-choice active" data-logo="assets/app-icon-cream.png">
               <img src="assets/app-icon-cream.png" alt="Ivory Konian logo variation">
@@ -619,10 +622,6 @@ function renderProfile() {
             <button class="logo-choice" data-logo="assets/app-icon-bronze.png">
               <img src="assets/app-icon-bronze.png" alt="Bronze Konian logo variation">
               <span>Bronze</span>
-            </button>
-            <button class="logo-choice" data-logo="assets/app-icon-dark.png">
-              <img src="assets/app-icon-dark.png" alt="Onyx Konian logo variation">
-              <span>Onyx</span>
             </button>
           </div>
         </div>
