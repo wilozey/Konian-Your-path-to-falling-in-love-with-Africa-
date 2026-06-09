@@ -1457,3 +1457,220 @@ textarea {
     padding-bottom: 108px;
   }
 }
+
+/* Ivory product refinement: keeps the luxury gold system without making the app feel grim. */
+:root {
+  --ink: #171411;
+  --muted: #756c60;
+  --line: rgba(190, 164, 113, 0.42);
+  --paper: #f8f5ef;
+  --paper-strong: #fffdf8;
+  --forest: #b18a2c;
+  --leaf: #8f7247;
+  --sun: #d4af37;
+  --coral: #b8864a;
+  --sky: #ece9e0;
+  --shadow: 0 18px 48px rgba(64, 45, 20, 0.12);
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 50% -8%, rgba(212, 175, 55, 0.16), transparent 30rem),
+    linear-gradient(180deg, #fffdf8 0%, #f8f5ef 44%, #efe7d8 100%);
+}
+
+body::before {
+  opacity: 0.1;
+  background:
+    linear-gradient(180deg, rgba(248, 245, 239, 0.8), rgba(248, 245, 239, 0.98)),
+    url("assets/scenes/savanna-sunset.jpg") center/cover;
+}
+
+.app-status,
+.topbar {
+  color: var(--ink);
+  background: rgba(255, 253, 248, 0.88);
+  border-color: rgba(190, 164, 113, 0.34);
+}
+
+.topbar {
+  box-shadow: 0 14px 32px rgba(64, 45, 20, 0.08);
+}
+
+.brand small,
+.nav-links,
+.section-title p,
+.muted {
+  color: var(--muted);
+}
+
+.nav-links a {
+  color: #61584d;
+}
+
+.nav-links a:hover {
+  color: #0a0a0a;
+}
+
+.profile-chip,
+.btn.light,
+.segmented button,
+.search,
+select,
+input,
+textarea {
+  border-color: rgba(190, 164, 113, 0.42);
+  background: rgba(255, 253, 248, 0.92);
+  color: var(--ink);
+}
+
+.hero {
+  color: #f8f5ef;
+}
+
+.hero-logo {
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.hero-search {
+  background: rgba(255, 253, 248, 0.96);
+}
+
+.luxury-rail,
+.stats-band {
+  background: rgba(190, 164, 113, 0.28);
+}
+
+.luxury-rail span,
+.stat,
+.card,
+.panel,
+.metric,
+.tier,
+.review,
+.day-card,
+.booking-card,
+.route-summary div,
+.transport-list article,
+.step-card {
+  color: var(--ink);
+  border-color: rgba(190, 164, 113, 0.38);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 253, 248, 0.9)),
+    rgba(255, 253, 248, 0.92);
+  box-shadow: var(--shadow);
+}
+
+.luxury-rail span {
+  color: #846720;
+}
+
+.badge,
+.chip {
+  background: rgba(248, 245, 239, 0.96);
+  color: #72591c;
+  border-color: rgba(190, 164, 113, 0.44);
+}
+
+.badge.green {
+  color: #456147;
+  background: #e7ebe3;
+}
+
+.badge.gold {
+  color: #0a0a0a;
+  background: linear-gradient(145deg, #eadb92, #d4af37 58%, #a7792f);
+}
+
+.btn {
+  background: linear-gradient(145deg, #eadb92, #d4af37 48%, #a7792f);
+  color: #0a0a0a;
+  box-shadow: 0 14px 34px rgba(177, 138, 44, 0.22);
+}
+
+.btn.secondary {
+  background: rgba(255, 253, 248, 0.14);
+  color: #f8f5ef;
+}
+
+.card:hover,
+.booking-card:hover,
+.tier:hover {
+  border-color: rgba(177, 138, 44, 0.58);
+  box-shadow: 0 20px 56px rgba(64, 45, 20, 0.16);
+}
+
+.bottom-tabs {
+  color: var(--ink);
+  background: rgba(255, 253, 248, 0.94);
+  border-color: rgba(190, 164, 113, 0.36);
+  box-shadow: 0 -14px 34px rgba(64, 45, 20, 0.12);
+}
+
+.bottom-tabs a {
+  color: #766b5c;
+}
+
+.bottom-tabs a.active {
+  color: #0a0a0a;
+  background: linear-gradient(145deg, #eadb92, #d4af37 55%, #a7792f);
+  box-shadow: 0 10px 22px rgba(177, 138, 44, 0.24);
+}
+
+.logo-variations {
+  grid-column: 1 / -1;
+}
+
+.logo-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.logo-choice {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  padding: 14px;
+  border: 1px solid rgba(190, 164, 113, 0.38);
+  border-radius: 14px;
+  background: #fffdf8;
+  color: #5f5548;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.logo-choice img {
+  width: 82px;
+  height: 82px;
+  border-radius: 22px;
+  object-fit: cover;
+  box-shadow: 0 14px 30px rgba(64, 45, 20, 0.16);
+}
+
+.logo-choice.active {
+  border-color: rgba(177, 138, 44, 0.82);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.16);
+}
+
+@media (max-width: 820px) {
+  body {
+    background: linear-gradient(180deg, #fffdf8, #f8f5ef 58%, #efe7d8);
+  }
+
+  .app-status,
+  .topbar,
+  .bottom-tabs {
+    background: rgba(255, 253, 248, 0.94);
+  }
+
+  .mobile-quick-actions a,
+  .stats-band,
+  .toolbar,
+  .panel {
+    background: rgba(255, 253, 248, 0.94);
+  }
+}

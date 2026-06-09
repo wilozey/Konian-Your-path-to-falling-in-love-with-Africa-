@@ -608,6 +608,24 @@ function renderProfile() {
           <p class="muted">Founder profile preview - Côte d'Ivoire, UK - Building a Côte d'Ivoire-first travel operating system.</p>
           <a class="btn" href="#/pricing">Manage plan</a>
         </div>
+        <div class="panel logo-variations">
+          <h2>Logo variations</h2>
+          <p class="muted">Choose the mark treatment that best fits the surface.</p>
+          <div class="logo-choice-grid">
+            <button class="logo-choice active" data-logo="assets/app-icon-cream.png">
+              <img src="assets/app-icon-cream.png" alt="Ivory Konian logo variation">
+              <span>Ivory</span>
+            </button>
+            <button class="logo-choice" data-logo="assets/app-icon-bronze.png">
+              <img src="assets/app-icon-bronze.png" alt="Bronze Konian logo variation">
+              <span>Bronze</span>
+            </button>
+            <button class="logo-choice" data-logo="assets/app-icon-dark.png">
+              <img src="assets/app-icon-dark.png" alt="Onyx Konian logo variation">
+              <span>Onyx</span>
+            </button>
+          </div>
+        </div>
         <div class="panel">
           <h2>Saved places</h2>
           ${saved.length ? saved.map((id) => {
@@ -621,6 +639,14 @@ function renderProfile() {
     </section>
   `;
   document.querySelector(".content-grid .panel .muted").textContent = "Founder profile preview - Côte d'Ivoire, UK - Building a Côte d'Ivoire-first travel operating system.";
+  document.querySelectorAll("[data-logo]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll("[data-logo]").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      const logo = document.querySelector(".brand-logo");
+      if (logo) logo.src = button.dataset.logo;
+    });
+  });
 }
 
 function renderPricing() {
