@@ -325,6 +325,58 @@ function setStore(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function currentLanguage() {
+  return store("konianLanguage", "en");
+}
+
+function isFrench() {
+  return currentLanguage() === "fr";
+}
+
+function tx(en, fr) {
+  return isFrench() ? fr : en;
+}
+
+function applyLanguageChrome() {
+  const fr = isFrench();
+  document.documentElement.lang = fr ? "fr" : "en";
+  document.title = fr ? "Konian | Votre chemin pour tomber amoureux de la Cote d'Ivoire" : "Konian | Your path to falling in love with Cote d'Ivoire";
+  const languageCode = document.getElementById("languageCode");
+  const languageLabel = document.getElementById("languageLabel");
+  if (languageCode) languageCode.textContent = fr ? "EN / FR" : "FR / EN";
+  if (languageLabel) languageLabel.textContent = fr ? "Francais" : "English";
+  const brandSmall = document.querySelector(".brand small");
+  if (brandSmall) brandSmall.textContent = fr ? "Votre chemin pour tomber amoureux de la Cote d'Ivoire" : "Your path to falling in love with Cote d'Ivoire";
+  const navLabels = [
+    [".nav-links a[href='#/discover']", fr ? "Explorer" : "Explore"],
+    [".nav-links a[href='#/plan']", fr ? "Planifier" : "Plan"],
+    [".nav-links a[href='#/map']", fr ? "Carte" : "Map"],
+    [".nav-links a[href='#/dashboard']", fr ? "Pour les guides" : "For Guides"],
+    [".nav-links a[href='#/pricing']", fr ? "Tarifs" : "Pricing"],
+    [".bottom-tabs a[href='#/'] span", fr ? "Accueil" : "Home"],
+    [".bottom-tabs a[href='#/'] small", fr ? "Accueil" : "Home"],
+    [".bottom-tabs a[href='#/discover'] span", fr ? "Explorer" : "Explore"],
+    [".bottom-tabs a[href='#/discover'] small", fr ? "Explorer" : "Explore"],
+    [".bottom-tabs a[href='#/plan'] span", fr ? "Planifier" : "Plan"],
+    [".bottom-tabs a[href='#/plan'] small", fr ? "Plan" : "Plan"],
+    [".bottom-tabs a[href='#/profile'] span", fr ? "Moi" : "Me"],
+    [".bottom-tabs a[href='#/profile'] small", fr ? "Moi" : "Me"]
+  ];
+  navLabels.forEach(([selector, label]) => {
+    const element = document.querySelector(selector);
+    if (element) element.textContent = label;
+  });
+}
+
+function setupLanguageToggle() {
+  const toggle = document.getElementById("languageToggle");
+  if (!toggle) return;
+  toggle.addEventListener("click", () => {
+    setStore("konianLanguage", isFrench() ? "en" : "fr");
+    route();
+  });
+}
+
 function route() {
   const [page, id] = location.hash.replace("#/", "").split("/");
   const current = page || "";
@@ -344,6 +396,7 @@ function route() {
   document.querySelectorAll("[data-nav]").forEach((link) => {
     link.classList.toggle("active", link.dataset.nav === current);
   });
+  applyLanguageChrome();
   applyLogoVariation();
   app.focus({ preventScroll: true });
 }
@@ -370,7 +423,7 @@ function scoutCard(place, rank) {
       <img src="${place.image}" alt="${place.name}" loading="lazy">
       <div class="scout-body">
         <div class="scout-topline">
-          <span class="badge gold">Scout pick ${displayRank}</span>
+          <span class="badge gold">${tx("Scout pick", "Choix Scout")} ${displayRank}</span>
           <span class="price-pill">${place.price}</span>
         </div>
         <div class="score-row">
@@ -383,13 +436,13 @@ function scoutCard(place, rank) {
         </div>
         <p>${place.why}</p>
         <div class="detail-list">
-          <span>Best for: ${place.bestFor}</span>
-          <span>Category: ${place.category}</span>
+          <span>${tx("Best for", "Ideal pour")} : ${place.bestFor}</span>
+          <span>${tx("Category", "Categorie")} : ${place.category}</span>
         </div>
         <div class="signal-row">
           ${place.signals.map((signal) => `<span>${signal}</span>`).join("")}
         </div>
-        <a class="btn light" href="#/plan">Plan from my location</a>
+        <a class="btn light" href="#/plan">${tx("Plan from my location", "Planifier depuis ma position")}</a>
       </div>
     </article>
   `;
@@ -402,24 +455,24 @@ function card(item) {
       <div class="card-body">
         <div class="chips">
           <span class="badge green">${item.category}</span>
-          ${item.sponsored ? '<span class="badge gold">Sponsored</span>' : ""}
-          <span class="badge">Verified guide</span>
+          ${item.sponsored ? `<span class="badge gold">${tx("Sponsored", "Sponsorise")}</span>` : ""}
+          <span class="badge">${tx("Verified guide", "Guide verifie")}</span>
         </div>
         <h3>${item.title}</h3>
         <p class="muted">${item.titleFr}</p>
         <p class="muted">${item.city}, ${item.country}</p>
         <div class="meta">
-          <span>Rating ${item.rating} (${item.reviews})</span>
+          <span>${tx("Rating", "Note")} ${item.rating} (${item.reviews})</span>
           <strong>${money.format(item.price)}</strong>
         </div>
         <div class="trust-row">
           <span>FR/EN</span>
-          <span>48h cancel</span>
-          <span>Local host</span>
+          <span>${tx("48h cancel", "Annulation 48h")}</span>
+          <span>${tx("Local host", "Hote local")}</span>
         </div>
         <div class="actions" style="margin-top: 14px">
-          <a class="btn light" href="#/experience/${item.id}">View / Voir</a>
-          <button class="btn light" data-save="${item.id}">Save / Enregistrer</button>
+          <a class="btn light" href="#/experience/${item.id}">${tx("View", "Voir")}</a>
+          <button class="btn light" data-save="${item.id}">${tx("Save", "Enregistrer")}</button>
         </div>
       </div>
     </article>
@@ -432,12 +485,13 @@ function bindSaveButtons() {
       const saved = new Set(store("konianSaved", []));
       saved.add(button.dataset.save);
       setStore("konianSaved", [...saved]);
-      button.textContent = "Saved / Enregistré";
+      button.textContent = tx("Saved", "Enregistre");
     });
   });
 }
 
 function renderHome() {
+  const fr = isFrench();
   app.innerHTML = `
     <section class="hero">
       <div class="hero-layout">
@@ -446,48 +500,48 @@ function renderHome() {
           <img src="assets/app-icon-cream.png" alt="Ivory Konian logo">
           <img src="assets/app-icon-bronze.png" alt="Bronze Konian logo">
         </div>
-        <div class="eyebrow">Côte d'Ivoire first - français & English</div>
+        <div class="eyebrow">${tx("Cote d'Ivoire first - French & English", "Cote d'Ivoire d'abord - francais & anglais")}</div>
         <h1>Konian</h1>
-        <p>Your path to falling in love with Côte d'Ivoire. Verified bilingual guides, hidden cultural moments and AI-planned journeys from Abidjan to Grand-Bassam, Assinie, Yamoussoukro and Man.</p>
+        <p>${tx("Your path to falling in love with Cote d'Ivoire. Verified bilingual guides, hidden cultural moments and AI-planned journeys from Abidjan to Grand-Bassam, Assinie, Yamoussoukro and Man.", "Votre chemin pour tomber amoureux de la Cote d'Ivoire. Guides bilingues verifies, moments culturels caches et voyages planifies par IA d'Abidjan a Grand-Bassam, Assinie, Yamoussoukro et Man.")}</p>
         <div class="hero-search" role="search">
-          <input type="search" placeholder="Where to? Abidjan, Bassam, Assinie..." aria-label="Search destinations">
-          <a class="btn" href="#/discover">Explore / Explorer</a>
+          <input type="search" placeholder="${tx("Where to? Abidjan, Bassam, Assinie...", "Ou aller ? Abidjan, Bassam, Assinie...")}" aria-label="${tx("Search destinations", "Rechercher des destinations")}">
+          <a class="btn" href="#/discover">${tx("Explore", "Explorer")}</a>
         </div>
         <div class="hero-actions">
-          <a class="btn" href="#/plan">Plan my trip / Planifier</a>
-          <a class="btn secondary" href="#/scout">Scout beyond Abidjan</a>
+          <a class="btn" href="#/plan">${tx("Plan my trip", "Planifier mon voyage")}</a>
+          <a class="btn secondary" href="#/scout">${tx("Scout beyond Abidjan", "Explorer hors d'Abidjan")}</a>
         </div>
         <div class="hero-destinations" aria-label="Featured launch places">
-          <span>Assinie lagoon</span>
-          <span>Grand-Bassam heritage</span>
-          <span>Man highlands</span>
+          <span>${tx("Assinie lagoon", "Lagune d'Assinie")}</span>
+          <span>${tx("Grand-Bassam heritage", "Patrimoine de Grand-Bassam")}</span>
+          <span>${tx("Man highlands", "Montagnes de Man")}</span>
         </div>
       </div>
       <div class="hero-visual" aria-label="Konian discovery preview">
         <div class="hero-photo main-photo">
           <img src="assets/scenes/zanzibar-beach.jpg" alt="Coastal discovery preview">
-          <span>Grand-Bassam coast</span>
+          <span>${tx("Grand-Bassam coast", "Cote de Grand-Bassam")}</span>
         </div>
         <div class="hero-photo side-photo">
           <img src="assets/scenes/savanna-sunset.jpg" alt="Lagoon sunset preview">
-          <span>Assinie weekend</span>
+          <span>${tx("Assinie weekend", "Week-end a Assinie")}</span>
         </div>
         <div class="hero-scout-mini">
-          <strong>Scout score 91</strong>
-          <span>Great value outside Abidjan</span>
+          <strong>${tx("Scout score 91", "Score Scout 91")}</strong>
+          <span>${tx("Great value outside Abidjan", "Excellent choix hors d'Abidjan")}</span>
         </div>
         <div class="hero-photo small-photo">
           <img src="assets/scenes/okavango-delta.jpg" alt="Highland nature route preview">
-          <span>Man highlands</span>
+          <span>${tx("Man highlands", "Montagnes de Man")}</span>
         </div>
       </div>
       </div>
     </section>
     <section class="stats-band" aria-label="Konian platform statistics">
-      <div class="stat"><strong>1</strong><span>Launch country: Côte d'Ivoire</span></div>
-      <div class="stat"><strong>6</strong><span>Curated pilot experiences</span></div>
-      <div class="stat"><strong>FR/EN</strong><span>Bilingual by design</span></div>
-      <div class="stat"><strong>10%</strong><span>Guide-friendly commission</span></div>
+      <div class="stat"><strong>1</strong><span>${tx("Launch country: Cote d'Ivoire", "Pays de lancement : Cote d'Ivoire")}</span></div>
+      <div class="stat"><strong>6</strong><span>${tx("Curated pilot experiences", "Experiences pilotes selectionnees")}</span></div>
+      <div class="stat"><strong>FR/EN</strong><span>${tx("Bilingual by design", "Bilingue par conception")}</span></div>
+      <div class="stat"><strong>10%</strong><span>${tx("Guide-friendly commission", "Commission favorable aux guides")}</span></div>
     </section>
     <section class="luxury-rail" aria-label="Konian brand values">
       <span>Discovery</span>
@@ -497,28 +551,28 @@ function renderHome() {
       <span>Connection</span>
     </section>
     <section class="mobile-quick-actions" aria-label="Quick actions">
-      <a href="#/discover"><strong>Find</strong><span>Explore / Explorer</span></a>
-      <a href="#/plan"><strong>AI</strong><span>AI plan / Plan IA</span></a>
+      <a href="#/discover"><strong>${tx("Find", "Trouver")}</strong><span>${tx("Explore", "Explorer")}</span></a>
+      <a href="#/plan"><strong>IA</strong><span>${tx("AI plan", "Plan IA")}</span></a>
       <a href="#/scout"><strong>Scout</strong><span>Beyond Abidjan</span></a>
       <a href="#/dashboard"><strong>Pro</strong><span>Guides</span></a>
     </section>
     <section class="section scout-section">
       <div class="section-title">
         <div class="eyebrow">Autonomous Scout</div>
-        <h2>Discover places beyond Abidjan with better signals.</h2>
-        <p>Konian ranks hotels, restaurants and routes by review quality, price value, attention to detail and how strongly they invite travellers outside the capital.</p>
+        <h2>${tx("Discover places beyond Abidjan with better signals.", "Decouvrez des lieux hors d'Abidjan avec de meilleurs signaux.")}</h2>
+        <p>${tx("Konian ranks hotels, restaurants and routes by review quality, price value, attention to detail and how strongly they invite travellers outside the capital.", "Konian classe les hotels, restaurants et routes selon la qualite des avis, le rapport qualite-prix, le soin du detail et leur capacite a faire sortir les voyageurs de la capitale.")}</p>
       </div>
       <div class="scout-strip">
         ${rankedScoutPlaces().slice(0, 3).map(scoutCard).join("")}
       </div>
       <div class="center-action">
-        <a class="btn" href="#/scout">Open Scout / Ouvrir Scout</a>
+        <a class="btn" href="#/scout">${tx("Open Scout", "Ouvrir Scout")}</a>
       </div>
     </section>
     <section class="section">
       <div class="section-title">
-        <h2>Start with places that have a pulse.</h2>
-        <p>Featured launch places focus on Côte d'Ivoire with local context, cultural depth, and bilingual guide-led discovery.</p>
+        <h2>${tx("Start with places that have a pulse.", "Commencez par des lieux qui ont une ame.")}</h2>
+        <p>${tx("Featured launch places focus on Cote d'Ivoire with local context, cultural depth, and bilingual guide-led discovery.", "Les lieux de lancement mettent la Cote d'Ivoire en avant avec du contexte local, une profondeur culturelle et des guides bilingues.")}</p>
       </div>
       <div class="card-grid">
         ${destinations.map((item) => `
@@ -528,7 +582,7 @@ function renderHome() {
               <span class="badge">${item.type}</span>
               <h3>${item.name}</h3>
               <p class="muted">${item.note}</p>
-              <a class="btn light" href="#/discover">Explore / Explorer ${item.name}</a>
+              <a class="btn light" href="#/discover">${tx("Explore", "Explorer")} ${item.name}</a>
             </div>
           </article>
         `).join("")}
@@ -536,20 +590,20 @@ function renderHome() {
     </section>
     <section class="section">
       <div class="section-title">
-        <h2>Top-rated experiences</h2>
-        <p>Seeded for the Côte d'Ivoire MVP: culture, food, heritage, lagoon escapes, adventure, and diaspora reconnection.</p>
+        <h2>${tx("Top-rated experiences", "Experiences les mieux notees")}</h2>
+        <p>${tx("Seeded for the Cote d'Ivoire MVP: culture, food, heritage, lagoon escapes, adventure, and diaspora reconnection.", "Selection initiale pour le MVP Cote d'Ivoire : culture, gastronomie, patrimoine, lagune, aventure et reconnexion diaspora.")}</p>
       </div>
       <div class="card-grid">${experiences.slice(0, 3).map(card).join("")}</div>
     </section>
     <section class="section">
       <div class="section-title centered">
-        <div class="eyebrow">How Konian works</div>
-        <h2>From overwhelmed to on your way</h2>
+        <div class="eyebrow">${tx("How Konian works", "Comment fonctionne Konian")}</div>
+        <h2>${tx("From overwhelmed to on your way", "De l'idee floue au voyage clair")}</h2>
       </div>
       <div class="steps-grid">
-        <article class="step-card"><span>01</span><h3>Tell us your dream</h3><p class="muted">Share where in Côte d'Ivoire, how long, your budget, language preference and what moves you.</p></article>
-        <article class="step-card"><span>02</span><h3>Get a living itinerary</h3><p class="muted">A day-by-day plan with verified guides, hidden cultural moments and honest costs.</p></article>
-        <article class="step-card"><span>03</span><h3>Book with confidence</h3><p class="muted">Every guide is verified, every review is aggregated, and every booking is tracked in one place.</p></article>
+        <article class="step-card"><span>01</span><h3>${tx("Tell us your dream", "Dites-nous votre envie")}</h3><p class="muted">${tx("Share where in Cote d'Ivoire, how long, your budget, language preference and what moves you.", "Indiquez ou aller en Cote d'Ivoire, la duree, le budget, la langue et ce qui vous attire.")}</p></article>
+        <article class="step-card"><span>02</span><h3>${tx("Get a living itinerary", "Recevez un itineraire vivant")}</h3><p class="muted">${tx("A day-by-day plan with verified guides, hidden cultural moments and honest costs.", "Un plan jour par jour avec guides verifies, moments culturels caches et couts transparents.")}</p></article>
+        <article class="step-card"><span>03</span><h3>${tx("Book with confidence", "Reservez avec confiance")}</h3><p class="muted">${tx("Every guide is verified, every review is aggregated, and every booking is tracked in one place.", "Chaque guide est verifie, les avis sont regroupes et les reservations sont suivies au meme endroit.")}</p></article>
       </div>
     </section>
     <section class="section trust-section">
@@ -586,16 +640,16 @@ function renderDiscover() {
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>Discover Côte d'Ivoire / Découvrir la Côte d'Ivoire</h2>
-        <p>Search by city, category, price, language and sponsored visibility.</p>
+        <h2>${tx("Discover Cote d'Ivoire", "Decouvrir la Cote d'Ivoire")}</h2>
+        <p>${tx("Search by city, category, price, language and sponsored visibility.", "Recherchez par ville, categorie, prix, langue et visibilite sponsorisee.")}</p>
       </div>
       <div class="toolbar">
-        <input class="search" id="search" type="search" placeholder="Search Abidjan, Bassam, food, heritage...">
-        <select id="country"><option value="">All Côte d'Ivoire</option>${[...new Set(experiences.map((e) => e.country))].map((c) => `<option>${c}</option>`).join("")}</select>
-        <select id="category"><option value="">All categories</option>${[...new Set(experiences.map((e) => e.category))].map((c) => `<option>${c}</option>`).join("")}</select>
-        <select id="language"><option value="">Any language</option><option value="fran">French / Français</option><option value="english">English</option><option value="nouchi">Nouchi</option></select>
-        <select id="price"><option value="">Any price</option><option value="60">Under $60</option><option value="100">Under $100</option><option value="999">All premium</option></select>
-        <select id="sort"><option value="recommended">Recommended</option><option value="rating">Highest rated</option><option value="price">Lowest price</option><option value="premium">Premium first</option></select>
+        <input class="search" id="search" type="search" placeholder="${tx("Search Abidjan, Bassam, food, heritage...", "Rechercher Abidjan, Bassam, gastronomie, patrimoine...")}">
+        <select id="country"><option value="">${tx("All Cote d'Ivoire", "Toute la Cote d'Ivoire")}</option>${[...new Set(experiences.map((e) => e.country))].map((c) => `<option>${c}</option>`).join("")}</select>
+        <select id="category"><option value="">${tx("All categories", "Toutes les categories")}</option>${[...new Set(experiences.map((e) => e.category))].map((c) => `<option>${c}</option>`).join("")}</select>
+        <select id="language"><option value="">${tx("Any language", "Toutes les langues")}</option><option value="fran">Francais</option><option value="english">English</option><option value="nouchi">Nouchi</option></select>
+        <select id="price"><option value="">${tx("Any price", "Tous les prix")}</option><option value="60">${tx("Under $60", "Moins de $60")}</option><option value="100">${tx("Under $100", "Moins de $100")}</option><option value="999">${tx("All premium", "Tous premium")}</option></select>
+        <select id="sort"><option value="recommended">${tx("Recommended", "Recommande")}</option><option value="rating">${tx("Highest rated", "Mieux notes")}</option><option value="price">${tx("Lowest price", "Prix le plus bas")}</option><option value="premium">${tx("Premium first", "Premium d'abord")}</option></select>
       </div>
       <div class="card-grid" id="results"></div>
     </section>
@@ -612,7 +666,7 @@ function renderDiscover() {
       if (sort === "premium") return Number(b.sponsored) - Number(a.sponsored) || b.rating - a.rating;
       return Number(b.sponsored) - Number(a.sponsored) || b.rating - a.rating || a.price - b.price;
     });
-    document.getElementById("results").innerHTML = filtered.length ? filtered.map(card).join("") : '<div class="empty-state">No experiences match those filters yet.</div>';
+    document.getElementById("results").innerHTML = filtered.length ? filtered.map(card).join("") : `<div class="empty-state">${tx("No experiences match those filters yet.", "Aucune experience ne correspond encore a ces filtres.")}</div>`;
     bindSaveButtons();
   };
   controls.forEach((control) => control.addEventListener("input", update));
@@ -624,42 +678,42 @@ function renderScout() {
     <section class="section scout-page">
       <div class="section-title">
         <div class="eyebrow">Autonomous Scout / Veille autonome</div>
-        <h2>Great places outside the capital, ranked with care.</h2>
-        <p>Scout helps travellers discover hotels, restaurants and routes across Cote d'Ivoire by combining public web signals, review strength, price value, detail quality and distance from Abidjan.</p>
+        <h2>${tx("Great places outside the capital, ranked with care.", "De beaux lieux hors de la capitale, classes avec soin.")}</h2>
+        <p>${tx("Scout helps travellers discover hotels, restaurants and routes across Cote d'Ivoire by combining public web signals, review strength, price value, detail quality and distance from Abidjan.", "Scout aide les voyageurs a decouvrir hotels, restaurants et routes en Cote d'Ivoire en combinant signaux web publics, force des avis, rapport qualite-prix, qualite des details et distance d'Abidjan.")}</p>
       </div>
       <div class="scout-console">
         <article class="panel scout-method">
-          <h3>How Scout ranks places</h3>
+          <h3>${tx("How Scout ranks places", "Comment Scout classe les lieux")}</h3>
           <div class="method-grid">
-            <span><strong>35%</strong> Review quality</span>
-            <span><strong>25%</strong> Price value</span>
-            <span><strong>20%</strong> Attention to detail</span>
-            <span><strong>15%</strong> Outside Abidjan</span>
-            <span><strong>5%</strong> Public buzz</span>
+            <span><strong>35%</strong> ${tx("Review quality", "Qualite des avis")}</span>
+            <span><strong>25%</strong> ${tx("Price value", "Rapport qualite-prix")}</span>
+            <span><strong>20%</strong> ${tx("Attention to detail", "Soin du detail")}</span>
+            <span><strong>15%</strong> ${tx("Outside Abidjan", "Hors Abidjan")}</span>
+            <span><strong>5%</strong> ${tx("Public buzz", "Buzz public")}</span>
           </div>
-          <p class="muted">This MVP uses seeded public discovery signals. Production Scout should connect to official review, map and social APIs, respect robots.txt and platform rules, and flag sponsored placements clearly.</p>
+          <p class="muted">${tx("This MVP uses seeded public discovery signals. Production Scout should connect to official review, map and social APIs, respect robots.txt and platform rules, and flag sponsored placements clearly.", "Ce MVP utilise des signaux publics prepares. En production, Scout devra se connecter aux API officielles d'avis, de cartes et de reseaux sociaux, respecter robots.txt et les regles des plateformes, et signaler clairement les placements sponsorises.")}</p>
         </article>
         <article class="panel scout-feed">
-          <h3>Discovery controls</h3>
+          <h3>${tx("Discovery controls", "Filtres de decouverte")}</h3>
           <div class="toolbar compact-toolbar">
             <select id="scoutSort">
-              <option value="score">Best overall</option>
-              <option value="value">Best price value</option>
-              <option value="reviews">Strongest reviews</option>
-              <option value="outside">Most outside Abidjan</option>
+              <option value="score">${tx("Best overall", "Meilleur choix")}</option>
+              <option value="value">${tx("Best price value", "Meilleur prix")}</option>
+              <option value="reviews">${tx("Strongest reviews", "Avis les plus forts")}</option>
+              <option value="outside">${tx("Most outside Abidjan", "Le plus hors Abidjan")}</option>
             </select>
             <select id="scoutPrice">
-              <option value="">Any price</option>
+              <option value="">${tx("Any price", "Tous les prix")}</option>
               <option value="$">Budget</option>
-              <option value="$$">Mid range</option>
+              <option value="$$">${tx("Mid range", "Milieu de gamme")}</option>
               <option value="$$$">Premium</option>
             </select>
           </div>
           <div class="signal-row source-row">
-            <span>Public web</span>
-            <span>Reviews</span>
-            <span>Social mentions</span>
-            <span>Guide detail</span>
+            <span>${tx("Public web", "Web public")}</span>
+            <span>${tx("Reviews", "Avis")}</span>
+            <span>${tx("Social mentions", "Mentions sociales")}</span>
+            <span>${tx("Guide detail", "Detail guide")}</span>
           </div>
         </article>
       </div>
@@ -678,7 +732,7 @@ function renderScout() {
       if (sort === "outside") return b.outsideCapitalScore - a.outsideCapitalScore;
       return scoutScore(b) - scoutScore(a);
     });
-    document.getElementById("scoutResults").innerHTML = filtered.length ? filtered.map(scoutCard).join("") : '<div class="empty-state">No Scout places match this filter yet.</div>';
+    document.getElementById("scoutResults").innerHTML = filtered.length ? filtered.map(scoutCard).join("") : `<div class="empty-state">${tx("No Scout places match this filter yet.", "Aucun lieu Scout ne correspond encore a ce filtre.")}</div>`;
   };
   [sortControl, priceControl].forEach((control) => control.addEventListener("input", update));
   update();
@@ -756,45 +810,45 @@ function renderPlanner() {
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>AI Trip Planner</h2>
-        <p>Plan a Côte d'Ivoire journey from your starting point, in French or English, then let Konian rank the trip around what matters most.</p>
+        <h2>${tx("AI Trip Planner", "Planificateur de voyage IA")}</h2>
+        <p>${tx("Plan a Cote d'Ivoire journey from your starting point, in French or English, then let Konian rank the trip around what matters most.", "Planifiez un voyage en Cote d'Ivoire depuis votre point de depart, en francais ou en anglais, puis laissez Konian organiser le trajet selon vos priorites.")}</p>
       </div>
       <div class="content-grid">
         <form class="panel" id="plannerForm">
           <div class="form-grid">
-            <label>Destination<input name="destination" value="Abidjan, Grand-Bassam and Assinie" required></label>
-            <label>Starting location<input name="origin" value="London, United Kingdom" required></label>
-            <label>Days<input name="days" type="number" min="2" max="21" value="7" required></label>
-            <label>Total budget<input name="totalBudget" type="number" min="150" step="50" value="1800" required></label>
-            <label>Budget tier<select name="budget"><option>Budget</option><option selected>Mid-range</option><option>Luxury</option></select></label>
-            <label>Style<select name="style"><option>Relaxed</option><option selected>Balanced</option><option>Packed</option></select></label>
+            <label>${tx("Destination", "Destination")}<input name="destination" value="Abidjan, Grand-Bassam and Assinie" required></label>
+            <label>${tx("Starting location", "Point de depart")}<input name="origin" value="London, United Kingdom" required></label>
+            <label>${tx("Days", "Jours")}<input name="days" type="number" min="2" max="21" value="7" required></label>
+            <label>${tx("Total budget", "Budget total")}<input name="totalBudget" type="number" min="150" step="50" value="1800" required></label>
+            <label>${tx("Budget tier", "Niveau de budget")}<select name="budget"><option value="Budget">Budget</option><option value="Mid-range" selected>${tx("Mid-range", "Milieu de gamme")}</option><option value="Luxury">${tx("Luxury", "Luxe")}</option></select></label>
+            <label>${tx("Style", "Style")}<select name="style"><option value="Relaxed">${tx("Relaxed", "Detendu")}</option><option value="Balanced" selected>${tx("Balanced", "Equilibre")}</option><option value="Packed">${tx("Packed", "Intense")}</option></select></label>
           </div>
-          <h3>Transport throughout</h3>
+          <h3>${tx("Transport throughout", "Transport pendant le voyage")}</h3>
           <div class="option-grid">
             ${["Flight", "Train", "Coach", "Private driver", "Rental car", "Ferry", "Domestic flight", "Walking"].map((mode) => `<label><input type="checkbox" name="transport" value="${mode}" ${["Flight", "Private driver", "Domestic flight", "Walking"].includes(mode) ? "checked" : ""}>${mode}</label>`).join("")}
           </div>
-          <h3>Design priority</h3>
+          <h3>${tx("Design priority", "Priorite du plan")}</h3>
           <div class="form-grid">
             <label>Most important<select name="priority1"><option selected>Budget</option><option>Country</option><option>Transport comfort</option><option>Time</option><option>Culture</option><option>Safety</option></select></label>
             <label>Second<select name="priority2"><option>Budget</option><option selected>Country</option><option>Transport comfort</option><option>Time</option><option>Culture</option><option>Safety</option></select></label>
             <label>Third<select name="priority3"><option>Budget</option><option>Country</option><option selected>Culture</option><option>Transport comfort</option><option>Time</option><option>Safety</option></select></label>
           </div>
-          <h3>Interests</h3>
+          <h3>${tx("Interests", "Centres d'interet")}</h3>
           <div class="option-grid">
             ${["Culture", "Food", "Heritage", "Lagoon", "Diaspora", "Nightlife", "Wellness", "Adventure"].map((interest) => `<label><input type="checkbox" name="interests" value="${interest}" ${["Culture", "Food", "Heritage"].includes(interest) ? "checked" : ""}>${interest}</label>`).join("")}
           </div>
-          <div class="actions" style="margin-top: 18px"><button class="btn" type="submit">Generate itinerary</button></div>
+          <div class="actions" style="margin-top: 18px"><button class="btn" type="submit">${tx("Generate itinerary", "Generer l'itineraire")}</button></div>
         </form>
         <div class="panel" id="itinerary">
-          <h2>Your itinerary will appear here</h2>
-          <p class="muted">The MVP version uses structured local generation. A production build can connect this same flow to Claude, OpenAI, or another itinerary model.</p>
+          <h2>${tx("Your itinerary will appear here", "Votre itineraire apparaitra ici")}</h2>
+          <p class="muted">${tx("The MVP version uses structured local generation. A production build can connect this same flow to Claude, OpenAI, or another itinerary model.", "La version MVP utilise une generation locale structuree. Une version production pourra connecter ce meme flux a Claude, OpenAI ou un autre modele d'itineraire.")}</p>
         </div>
       </div>
     </section>
   `;
   const plannerForm = document.getElementById("plannerForm");
   plannerForm.elements.destination.value = "Abidjan, Grand-Bassam and Assinie";
-  plannerForm.elements.origin.closest("label").insertAdjacentHTML("afterend", '<label>Language / Langue<select name="language"><option selected>English</option><option>Français</option><option>Français + English</option></select></label>');
+  plannerForm.elements.origin.closest("label").insertAdjacentHTML("afterend", `<label>${tx("Language", "Langue")}<select name="language"><option ${isFrench() ? "" : "selected"}>English</option><option ${isFrench() ? "selected" : ""}>Francais</option><option>Francais + English</option></select></label>`);
   document.getElementById("plannerForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -873,8 +927,8 @@ function renderMap() {
   app.innerHTML = `
     <section class="map-shell">
       <aside class="map-sidebar">
-        <h1 style="font-size:2.6rem">Map Explorer</h1>
-        <p class="muted">Prototype Côte d'Ivoire map view with category-coded experience markers.</p>
+        <h1 style="font-size:2.6rem">${tx("Map Explorer", "Carte interactive")}</h1>
+        <p class="muted">${tx("Prototype Cote d'Ivoire map view with category-coded experience markers.", "Prototype de carte de la Cote d'Ivoire avec des marqueurs classes par categorie.")}</p>
         <div class="chips">${[...new Set(experiences.map((e) => e.category))].map((c) => `<span class="chip">${c}</span>`).join("")}</div>
         <div style="display:grid;gap:12px;margin-top:18px">${experiences.map((item) => `<a class="booking-card" href="#/experience/${item.id}"><strong>${item.title}</strong><p class="muted">${item.city}, ${item.country} · ${money.format(item.price)}</p></a>`).join("")}</div>
       </aside>
@@ -890,8 +944,8 @@ function renderBookings() {
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>My Bookings</h2>
-        <p>Track upcoming, pending, completed, and cancelled bookings.</p>
+        <h2>${tx("My Bookings", "Mes reservations")}</h2>
+        <p>${tx("Track upcoming, pending, completed, and cancelled bookings.", "Suivez les reservations a venir, en attente, terminees et annulees.")}</p>
       </div>
       <div class="card-grid">
         ${bookings.length ? bookings.map((booking, index) => `
@@ -900,13 +954,13 @@ function renderBookings() {
             <h3>${booking.title}</h3>
             <p class="muted">${booking.date} · ${booking.guests} guests · ${booking.code}</p>
             <div class="trust-row">
-              <span>Guide notified</span>
-              <span>48h cancel</span>
-              <span>Trip notes pending</span>
+              <span>${tx("Guide notified", "Guide informe")}</span>
+              <span>${tx("48h cancel", "Annulation 48h")}</span>
+              <span>${tx("Trip notes pending", "Notes de voyage en attente")}</span>
             </div>
-            <div class="meta"><strong>${money.format(booking.total)}</strong><button class="btn light" data-cancel="${index}">Cancel</button></div>
+            <div class="meta"><strong>${money.format(booking.total)}</strong><button class="btn light" data-cancel="${index}">${tx("Cancel", "Annuler")}</button></div>
           </article>
-        `).join("") : '<div class="empty-state">No bookings yet. Choose an experience and confirm a date.<br><br><a class="btn light" href="#/discover">Explore experiences</a></div>'}
+        `).join("") : `<div class="empty-state">${tx("No bookings yet. Choose an experience and confirm a date.", "Aucune reservation pour le moment. Choisissez une experience et confirmez une date.")}<br><br><a class="btn light" href="#/discover">${tx("Explore experiences", "Explorer les experiences")}</a></div>`}
       </div>
     </section>
   `;
@@ -924,17 +978,17 @@ function renderDashboard() {
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>Guide Dashboard</h2>
-        <p>Business tools for Ivorian guides, cultural operators, boutique hotels, and restaurants.</p>
+        <h2>${tx("Guide Dashboard", "Tableau de bord guide")}</h2>
+        <p>${tx("Business tools for Ivorian guides, cultural operators, boutique hotels, and restaurants.", "Outils professionnels pour guides ivoiriens, operateurs culturels, hotels boutique et restaurants.")}</p>
       </div>
       <div class="metric-grid">
-        <div class="metric"><strong>6</strong><span class="muted">Active listings</span></div>
-        <div class="metric"><strong>42</strong><span class="muted">Monthly bookings</span></div>
-        <div class="metric"><strong>$8.7k</strong><span class="muted">Revenue</span></div>
-        <div class="metric"><strong>4.8</strong><span class="muted">Average rating</span></div>
+        <div class="metric"><strong>6</strong><span class="muted">${tx("Active listings", "Annonces actives")}</span></div>
+        <div class="metric"><strong>42</strong><span class="muted">${tx("Monthly bookings", "Reservations mensuelles")}</span></div>
+        <div class="metric"><strong>$8.7k</strong><span class="muted">${tx("Revenue", "Revenus")}</span></div>
+        <div class="metric"><strong>4.8</strong><span class="muted">${tx("Average rating", "Note moyenne")}</span></div>
       </div>
       <div class="panel" style="margin-top:22px;overflow:auto">
-        <h2>Listing management</h2>
+        <h2>${tx("Listing management", "Gestion des annonces")}</h2>
         <table class="table">
           <thead><tr><th>Listing</th><th>Category</th><th>Price</th><th>Status</th><th></th></tr></thead>
           <tbody>${experiences.map((item, index) => `<tr><td>${item.title}</td><td>${item.category}</td><td>${money.format(item.price)}</td><td><span class="badge ${index % 2 ? "" : "green"}">${index % 2 ? "Draft" : "Active"}</span></td><td><button class="btn light">Edit</button></td></tr>`).join("")}</tbody>
@@ -950,28 +1004,28 @@ function renderProfile() {
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>Traveller Profile</h2>
-        <p>Premium status, saved places, booking history, and itinerary library.</p>
+        <h2>${tx("Traveller Profile", "Profil voyageur")}</h2>
+        <p>${tx("Premium status, saved places, booking history, and itinerary library.", "Statut premium, lieux enregistres, historique de reservations et bibliotheque d'itineraires.")}</p>
       </div>
       <div class="content-grid">
         <div class="panel">
-          <span class="badge gold">Adventurer premium</span>
+          <span class="badge gold">${tx("Adventurer premium", "Aventurier premium")}</span>
           <h2>Wilfried Konian</h2>
-          <p class="muted">Founder profile preview - Côte d'Ivoire, UK - Building a Côte d'Ivoire-first travel operating system.</p>
-          <a class="btn" href="#/pricing">Manage plan</a>
+          <p class="muted">${tx("Founder profile preview - Cote d'Ivoire, UK - Building a Cote d'Ivoire-first travel operating system.", "Apercu du profil fondateur - Cote d'Ivoire, Royaume-Uni - Construction d'un systeme de voyage centre sur la Cote d'Ivoire.")}</p>
+          <a class="btn" href="#/pricing">${tx("Manage plan", "Gerer l'abonnement")}</a>
         </div>
         <div class="panel logo-variations">
           <div class="logo-current">
             <img data-current-logo src="${pickLogoVariation().src}" alt="Current Konian logo variation">
             <div>
-              <h2>Logo mood rotation</h2>
-              <p class="muted">Konian can use a different logo mood daily or weekly. Random mode reshuffles from the full variation library.</p>
+              <h2>${tx("Logo mood rotation", "Rotation des styles de logo")}</h2>
+              <p class="muted">${tx("Konian can use a different logo mood daily or weekly. Random mode reshuffles from the full variation library.", "Konian peut utiliser un style de logo different chaque jour ou chaque semaine. Le mode aleatoire choisit dans toute la bibliotheque de variations.")}</p>
             </div>
           </div>
           <div class="segmented logo-mode" style="margin: 16px 0">
-            <button data-logo-mode="daily">Daily</button>
-            <button data-logo-mode="weekly">Weekly</button>
-            <button data-logo-mode="random">Random</button>
+            <button data-logo-mode="daily">${tx("Daily", "Quotidien")}</button>
+            <button data-logo-mode="weekly">${tx("Weekly", "Hebdomadaire")}</button>
+            <button data-logo-mode="random">${tx("Random", "Aleatoire")}</button>
           </div>
           <div class="logo-choice-grid">
             ${logoVariations.map((logo) => `
@@ -984,18 +1038,18 @@ function renderProfile() {
           </div>
         </div>
         <div class="panel">
-          <h2>Saved places</h2>
+          <h2>${tx("Saved places", "Lieux enregistres")}</h2>
           ${saved.length ? saved.map((id) => {
             const item = experiences.find((experience) => experience.id === id);
             return item ? `<p><a href="#/experience/${item.id}">${item.title}</a></p>` : "";
-          }).join("") : '<p class="muted">Saved experiences will appear here.</p>'}
-          <h2>Saved itineraries</h2>
-          ${plans.length ? plans.map((plan) => `<p>${plan.days} days in ${plan.destination} · ${plan.created}</p>`).join("") : '<p class="muted">Generated plans will appear here.</p>'}
+          }).join("") : `<p class="muted">${tx("Saved experiences will appear here.", "Les experiences enregistrees apparaitront ici.")}</p>`}
+          <h2>${tx("Saved itineraries", "Itineraires enregistres")}</h2>
+          ${plans.length ? plans.map((plan) => `<p>${plan.days} ${tx("days in", "jours a")} ${plan.destination} · ${plan.created}</p>`).join("") : `<p class="muted">${tx("Generated plans will appear here.", "Les plans generes apparaitront ici.")}</p>`}
         </div>
       </div>
     </section>
   `;
-  document.querySelector(".content-grid .panel .muted").textContent = "Founder profile preview - Côte d'Ivoire, UK - Building a Côte d'Ivoire-first travel operating system.";
+  document.querySelector(".content-grid .panel .muted").textContent = tx("Founder profile preview - Cote d'Ivoire, UK - Building a Cote d'Ivoire-first travel operating system.", "Apercu du profil fondateur - Cote d'Ivoire, Royaume-Uni - Construction d'un systeme de voyage centre sur la Cote d'Ivoire.");
   updateLogoControls();
   document.querySelectorAll("[data-logo-mode]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1033,23 +1087,23 @@ function updateLogoControls() {
 
 function renderPricing() {
   const traveller = [
-    ["Explorer", "$0", ["Basic discovery", "3 AI itineraries/month", "Standard booking"]],
-    ["Adventurer", "$9", ["Unlimited AI itineraries", "Offline map previews", "Priority booking"]],
-    ["Ambassador", "$19", ["Exclusive guide access", "Concierge support", "Community badge"]]
+    [tx("Explorer", "Explorateur"), "$0", [tx("Basic discovery", "Decouverte de base"), tx("3 AI itineraries/month", "3 itineraires IA/mois"), tx("Standard booking", "Reservation standard")]],
+    [tx("Adventurer", "Aventurier"), "$9", [tx("Unlimited AI itineraries", "Itineraires IA illimites"), tx("Offline map previews", "Apercus de carte hors ligne"), tx("Priority booking", "Reservation prioritaire")]],
+    [tx("Ambassador", "Ambassadeur"), "$19", [tx("Exclusive guide access", "Acces exclusif aux guides"), tx("Concierge support", "Assistance conciergerie"), tx("Community badge", "Badge communaute")]]
   ];
   const business = [
-    ["Starter", "$0", ["1 listing", "Basic analytics", "10% commission"]],
-    ["Professional", "$29", ["10 listings", "Advanced analytics", "8% commission"]],
-    ["Enterprise", "$99", ["Unlimited listings", "API access", "6% commission"]]
+    [tx("Starter", "Demarrage"), "$0", [tx("1 listing", "1 annonce"), tx("Basic analytics", "Statistiques de base"), "10% commission"]],
+    [tx("Professional", "Professionnel"), "$29", [tx("10 listings", "10 annonces"), tx("Advanced analytics", "Statistiques avancees"), "8% commission"]],
+    [tx("Enterprise", "Entreprise"), "$99", [tx("Unlimited listings", "Annonces illimitees"), tx("API access", "Acces API"), "6% commission"]]
   ];
   app.innerHTML = `
     <section class="section">
       <div class="section-title">
-        <h2>Pricing</h2>
-        <p>Dual-audience monetisation for travellers and Ivorian guides or businesses.</p>
+        <h2>${tx("Pricing", "Tarifs")}</h2>
+        <p>${tx("Dual-audience monetisation for travellers and Ivorian guides or businesses.", "Monetisation pour deux publics : voyageurs, guides ivoiriens et entreprises locales.")}</p>
       </div>
       <div class="segmented" style="margin-bottom:18px">
-        <button class="active" data-audience="traveller">Traveller</button>
+        <button class="active" data-audience="traveller">${tx("Traveller", "Voyageur")}</button>
         <button data-audience="business">Business</button>
       </div>
       <div class="tier-grid" id="tiers"></div>
@@ -1061,7 +1115,7 @@ function renderPricing() {
         <h2>${name}</h2>
         <div class="price">${price}<small>/mo</small></div>
         <ul>${features.map((feature) => `<li>${feature}</li>`).join("")}</ul>
-        <button class="btn">${price === "$0" ? "Start free" : "Upgrade"}</button>
+        <button class="btn">${price === "$0" ? tx("Start free", "Commencer gratuitement") : tx("Upgrade", "Passer au niveau superieur")}</button>
       </article>
     `).join("");
   };
@@ -1076,4 +1130,5 @@ function renderPricing() {
 }
 
 window.addEventListener("hashchange", route);
+setupLanguageToggle();
 route();
