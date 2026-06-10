@@ -19,16 +19,22 @@ Konian is strongest as a Côte d'Ivoire-first, bilingual travel companion. The c
 3. Côte d'Ivoire depth
    - Build dense coverage for Abidjan, Grand-Bassam, Assinie, Yamoussoukro, Man, San Pedro, Korhogo, Bouaké, and Jacqueville.
    - Add cultural moments, festival timing, local etiquette, and diaspora reconnecting routes.
+   - Prioritise places outside Abidjan so Konian becomes the app that helps travellers discover the country, not only the capital.
 
 4. Planning intelligence
    - Keep the origin, destination, budget, transport, language, and priority planner.
    - Add clear cost assumptions and explain why a route was chosen.
 
-5. Guide marketplace quality
+5. Autonomous discovery
+   - Use public web, review, map and social signals to find promising hotels, restaurants, cultural places and nature routes.
+   - Score places by review quality, price value, attention to detail, outside-Abidjan discovery value, and public buzz.
+   - For production, connect only through official APIs, approved partnerships or permitted crawling, with sponsored placement clearly labelled.
+
+6. Guide marketplace quality
    - Use a guide-first dashboard: bookings, revenue, listing quality, response time, and verification status.
    - Keep the 10% commission as a supply-side acquisition message.
 
-6. Monetisation
+7. Monetisation
    - Traveller premium should focus on unlimited AI plans, concierge support, saved offline trip notes, and priority bilingual support.
    - Business premium should focus on more listings, analytics, featured placement, and reduced commission.
 
@@ -40,11 +46,14 @@ Konian is strongest as a Côte d'Ivoire-first, bilingual travel companion. The c
 - Added guide verification, cancellation, safety notes, and local value to experience detail pages.
 - Improved booking cards with post-confirmation status cues.
 - Improved empty booking state with a direct discovery CTA.
+- Added Autonomous Scout for beyond-Abidjan hotels, restaurants and routes.
+- Added transparent Scout scoring by reviews, price value, detail quality, outside-capital value and public buzz.
 
 ## Next Build Candidates
 
 - Real bilingual toggle for all app strings.
 - Côte d'Ivoire map with region-based markers.
+- Production data connectors for Google Places, tourism boards, public web feeds and approved social APIs.
 - Guide onboarding and verification wizard.
 - Review submission after completed bookings.
 - Payment and deposit flow.

@@ -152,6 +152,111 @@ const destinations = [
   { name: "Man", type: "Adventure / Aventure", image: experiences[4].image, note: "Mountains, waterfalls, village hospitality and western highlands." }
 ];
 
+const scoutPlaces = [
+  {
+    name: "Assinie Lagoon Stays",
+    nameFr: "Sejours lagune a Assinie",
+    location: "Assinie-Mafia",
+    distance: "80 km east of Abidjan",
+    category: "Hotels + beach tables",
+    price: "$$$",
+    valueScore: 76,
+    reviewScore: 92,
+    detailScore: 90,
+    outsideCapitalScore: 96,
+    publicBuzzScore: 86,
+    image: experiences[2].image,
+    bestFor: "Slow luxury, couples, lagoon crossings",
+    why: "A strong coastal-resort signal with lagoon access, weekend demand and boat-led discovery beyond the capital.",
+    signals: ["Lagoon destination", "Review momentum", "Premium detail"]
+  },
+  {
+    name: "Grand-Bassam Heritage Quarter",
+    nameFr: "Quartier patrimoine de Grand-Bassam",
+    location: "Grand-Bassam",
+    distance: "45 km east of Abidjan",
+    category: "Boutique stays + cultural food",
+    price: "$$",
+    valueScore: 88,
+    reviewScore: 89,
+    detailScore: 91,
+    outsideCapitalScore: 82,
+    publicBuzzScore: 83,
+    image: experiences[1].image,
+    bestFor: "UNESCO walks, craft, beach cafes",
+    why: "Heritage, ceramics, coastal restaurants and walkable culture make Bassam a natural first trip outside Abidjan.",
+    signals: ["UNESCO context", "Craft culture", "Good value"]
+  },
+  {
+    name: "Man Highland Guesthouses",
+    nameFr: "Maisons d'hotes des montagnes de Man",
+    location: "Man",
+    distance: "570 km northwest of Abidjan",
+    category: "Guesthouses + nature guides",
+    price: "$$",
+    valueScore: 91,
+    reviewScore: 87,
+    detailScore: 86,
+    outsideCapitalScore: 100,
+    publicBuzzScore: 74,
+    image: experiences[4].image,
+    bestFor: "Waterfalls, mountains, village hospitality",
+    why: "High outside-capital value: nature, cooler air and local-hosted routes that feel very different from the coast.",
+    signals: ["Highland escape", "Nature-led", "Guide friendly"]
+  },
+  {
+    name: "Grand-Bereby Beach Retreats",
+    nameFr: "Retraites plage a Grand-Bereby",
+    location: "Grand-Bereby",
+    distance: "Southwest coast",
+    category: "Beach lodges + seafood",
+    price: "$$$",
+    valueScore: 73,
+    reviewScore: 88,
+    detailScore: 87,
+    outsideCapitalScore: 99,
+    publicBuzzScore: 78,
+    image: "assets/scenes/cape-town-coast.jpg",
+    bestFor: "Remote coast, seafood, quiet luxury",
+    why: "A premium coastal signal for travellers who want the sea without staying in the usual Abidjan weekend orbit.",
+    signals: ["Remote coast", "Premium stay", "Seafood"]
+  },
+  {
+    name: "N'guieme Beach Restaurants",
+    nameFr: "Restaurants de plage de N'guieme",
+    location: "N'guieme",
+    distance: "Near the lagoon routes east of Abidjan",
+    category: "Beach restaurants + day trips",
+    price: "$",
+    valueScore: 94,
+    reviewScore: 82,
+    detailScore: 80,
+    outsideCapitalScore: 91,
+    publicBuzzScore: 70,
+    image: "assets/scenes/zanzibar-beach.jpg",
+    bestFor: "Simple beach lunches, local discovery",
+    why: "A useful hidden-place signal: sandy beach, small restaurants and lagoon access make it ideal for budget-aware exploration.",
+    signals: ["Budget friendly", "Local food", "Beach route"]
+  },
+  {
+    name: "San-Pedro and Monogaga Coast",
+    nameFr: "Cote de San-Pedro et Monogaga",
+    location: "San-Pedro",
+    distance: "Southwest coast",
+    category: "Hotels + coastal activities",
+    price: "$$",
+    valueScore: 84,
+    reviewScore: 84,
+    detailScore: 82,
+    outsideCapitalScore: 98,
+    publicBuzzScore: 72,
+    image: "assets/scenes/savanna-sunset.jpg",
+    bestFor: "Coast, road trips, beach discovery",
+    why: "A high-potential southwest route for travellers ready to discover the country beyond the capital and the near-east coast.",
+    signals: ["Outside Abidjan", "Beach value", "Road trip"]
+  }
+];
+
 const app = document.querySelector("#app");
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 const logoVariations = [
@@ -226,6 +331,7 @@ function route() {
   const routes = {
     "": renderHome,
     discover: renderDiscover,
+    scout: renderScout,
     experience: () => renderExperience(id),
     plan: renderPlanner,
     map: renderMap,
@@ -240,6 +346,53 @@ function route() {
   });
   applyLogoVariation();
   app.focus({ preventScroll: true });
+}
+
+function scoutScore(place) {
+  return Math.round(
+    place.reviewScore * 0.35 +
+    place.valueScore * 0.25 +
+    place.detailScore * 0.2 +
+    place.outsideCapitalScore * 0.15 +
+    place.publicBuzzScore * 0.05
+  );
+}
+
+function rankedScoutPlaces() {
+  return [...scoutPlaces].sort((a, b) => scoutScore(b) - scoutScore(a));
+}
+
+function scoutCard(place, rank) {
+  const score = scoutScore(place);
+  const displayRank = Number.isFinite(rank) ? rank + 1 : "";
+  return `
+    <article class="scout-card">
+      <img src="${place.image}" alt="${place.name}" loading="lazy">
+      <div class="scout-body">
+        <div class="scout-topline">
+          <span class="badge gold">Scout pick ${displayRank}</span>
+          <span class="price-pill">${place.price}</span>
+        </div>
+        <div class="score-row">
+          <div class="score-ring" style="--score: ${score}%"><strong>${score}</strong><span>score</span></div>
+          <div>
+            <h3>${place.name}</h3>
+            <p class="muted">${place.nameFr}</p>
+            <p class="muted">${place.location} - ${place.distance}</p>
+          </div>
+        </div>
+        <p>${place.why}</p>
+        <div class="detail-list">
+          <span>Best for: ${place.bestFor}</span>
+          <span>Category: ${place.category}</span>
+        </div>
+        <div class="signal-row">
+          ${place.signals.map((signal) => `<span>${signal}</span>`).join("")}
+        </div>
+        <a class="btn light" href="#/plan">Plan from my location</a>
+      </div>
+    </article>
+  `;
 }
 
 function card(item) {
@@ -321,8 +474,21 @@ function renderHome() {
     <section class="mobile-quick-actions" aria-label="Quick actions">
       <a href="#/discover"><strong>Find</strong><span>Explore / Explorer</span></a>
       <a href="#/plan"><strong>AI</strong><span>AI plan / Plan IA</span></a>
-      <a href="#/map"><strong>Map</strong><span>Map</span></a>
+      <a href="#/scout"><strong>Scout</strong><span>Beyond Abidjan</span></a>
       <a href="#/dashboard"><strong>Pro</strong><span>Guides</span></a>
+    </section>
+    <section class="section scout-section">
+      <div class="section-title">
+        <div class="eyebrow">Autonomous Scout</div>
+        <h2>Discover places beyond Abidjan with better signals.</h2>
+        <p>Konian ranks hotels, restaurants and routes by review quality, price value, attention to detail and how strongly they invite travellers outside the capital.</p>
+      </div>
+      <div class="scout-strip">
+        ${rankedScoutPlaces().slice(0, 3).map(scoutCard).join("")}
+      </div>
+      <div class="center-action">
+        <a class="btn" href="#/scout">Open Scout / Ouvrir Scout</a>
+      </div>
     </section>
     <section class="section">
       <div class="section-title">
@@ -425,6 +591,71 @@ function renderDiscover() {
     bindSaveButtons();
   };
   controls.forEach((control) => control.addEventListener("input", update));
+  update();
+}
+
+function renderScout() {
+  app.innerHTML = `
+    <section class="section scout-page">
+      <div class="section-title">
+        <div class="eyebrow">Autonomous Scout / Veille autonome</div>
+        <h2>Great places outside the capital, ranked with care.</h2>
+        <p>Scout helps travellers discover hotels, restaurants and routes across Cote d'Ivoire by combining public web signals, review strength, price value, detail quality and distance from Abidjan.</p>
+      </div>
+      <div class="scout-console">
+        <article class="panel scout-method">
+          <h3>How Scout ranks places</h3>
+          <div class="method-grid">
+            <span><strong>35%</strong> Review quality</span>
+            <span><strong>25%</strong> Price value</span>
+            <span><strong>20%</strong> Attention to detail</span>
+            <span><strong>15%</strong> Outside Abidjan</span>
+            <span><strong>5%</strong> Public buzz</span>
+          </div>
+          <p class="muted">This MVP uses seeded public discovery signals. Production Scout should connect to official review, map and social APIs, respect robots.txt and platform rules, and flag sponsored placements clearly.</p>
+        </article>
+        <article class="panel scout-feed">
+          <h3>Discovery controls</h3>
+          <div class="toolbar compact-toolbar">
+            <select id="scoutSort">
+              <option value="score">Best overall</option>
+              <option value="value">Best price value</option>
+              <option value="reviews">Strongest reviews</option>
+              <option value="outside">Most outside Abidjan</option>
+            </select>
+            <select id="scoutPrice">
+              <option value="">Any price</option>
+              <option value="$">Budget</option>
+              <option value="$$">Mid range</option>
+              <option value="$$$">Premium</option>
+            </select>
+          </div>
+          <div class="signal-row source-row">
+            <span>Public web</span>
+            <span>Reviews</span>
+            <span>Social mentions</span>
+            <span>Guide detail</span>
+          </div>
+        </article>
+      </div>
+      <div class="scout-grid" id="scoutResults"></div>
+    </section>
+  `;
+
+  const sortControl = document.getElementById("scoutSort");
+  const priceControl = document.getElementById("scoutPrice");
+  const update = () => {
+    const price = priceControl.value;
+    const sort = sortControl.value;
+    const filtered = scoutPlaces.filter((place) => !price || place.price === price).sort((a, b) => {
+      if (sort === "value") return b.valueScore - a.valueScore;
+      if (sort === "reviews") return b.reviewScore - a.reviewScore;
+      if (sort === "outside") return b.outsideCapitalScore - a.outsideCapitalScore;
+      return scoutScore(b) - scoutScore(a);
+    });
+    document.getElementById("scoutResults").innerHTML = filtered.length ? filtered.map(scoutCard).join("") : '<div class="empty-state">No Scout places match this filter yet.</div>';
+  };
+  [sortControl, priceControl].forEach((control) => control.addEventListener("input", update));
   update();
 }
 
