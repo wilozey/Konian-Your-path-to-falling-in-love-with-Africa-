@@ -250,12 +250,19 @@ function card(item) {
         <div class="chips">
           <span class="badge green">${item.category}</span>
           ${item.sponsored ? '<span class="badge gold">Sponsored</span>' : ""}
+          <span class="badge">Verified guide</span>
         </div>
         <h3>${item.title}</h3>
+        <p class="muted">${item.titleFr}</p>
         <p class="muted">${item.city}, ${item.country}</p>
         <div class="meta">
           <span>Rating ${item.rating} (${item.reviews})</span>
           <strong>${money.format(item.price)}</strong>
+        </div>
+        <div class="trust-row">
+          <span>FR/EN</span>
+          <span>48h cancel</span>
+          <span>Local host</span>
         </div>
         <div class="actions" style="margin-top: 14px">
           <a class="btn light" href="#/experience/${item.id}">View / Voir</a>
@@ -354,6 +361,19 @@ function renderHome() {
         <article class="step-card"><span>03</span><h3>Book with confidence</h3><p class="muted">Every guide is verified, every review is aggregated, and every booking is tracked in one place.</p></article>
       </div>
     </section>
+    <section class="section trust-section">
+      <div class="section-title">
+        <div class="eyebrow">Trust by design</div>
+        <h2>Built for first-time visitors, diaspora travellers and local hosts.</h2>
+        <p>Konian should win because it feels safer, more local and more culturally intelligent than generic travel marketplaces.</p>
+      </div>
+      <div class="trust-grid">
+        <article class="trust-card"><strong>Verified local guides</strong><span>Identity, language ability, route knowledge and host quality are checked before listing.</span></article>
+        <article class="trust-card"><strong>Bilingual support</strong><span>French and English are available from discovery to planning, booking and trip notes.</span></article>
+        <article class="trust-card"><strong>Transparent costs</strong><span>Each plan separates guide cost, transport assumptions, meals and optional upgrades.</span></article>
+        <article class="trust-card"><strong>Community impact</strong><span>Local hosts keep more value through a 10% guide-friendly commission model.</span></article>
+      </div>
+    </section>
     <section class="section">
       <div class="guide-band">
         <div class="eyebrow">For local guides</div>
@@ -382,17 +402,24 @@ function renderDiscover() {
         <input class="search" id="search" type="search" placeholder="Search Abidjan, Bassam, food, heritage...">
         <select id="country"><option value="">All Côte d'Ivoire</option>${[...new Set(experiences.map((e) => e.country))].map((c) => `<option>${c}</option>`).join("")}</select>
         <select id="category"><option value="">All categories</option>${[...new Set(experiences.map((e) => e.category))].map((c) => `<option>${c}</option>`).join("")}</select>
+        <select id="language"><option value="">Any language</option><option value="fran">French / Français</option><option value="english">English</option><option value="nouchi">Nouchi</option></select>
         <select id="price"><option value="">Any price</option><option value="60">Under $60</option><option value="100">Under $100</option><option value="999">All premium</option></select>
+        <select id="sort"><option value="recommended">Recommended</option><option value="rating">Highest rated</option><option value="price">Lowest price</option><option value="premium">Premium first</option></select>
       </div>
       <div class="card-grid" id="results"></div>
     </section>
   `;
-  const controls = ["search", "country", "category", "price"].map((id) => document.getElementById(id));
+  const controls = ["search", "country", "category", "language", "price", "sort"].map((id) => document.getElementById(id));
   const update = () => {
-    const [search, country, category, price] = controls.map((control) => control.value.toLowerCase());
+    const [search, country, category, language, price, sort] = controls.map((control) => control.value.toLowerCase());
     const filtered = experiences.filter((item) => {
-      const text = `${item.title} ${item.country} ${item.city} ${item.category} ${item.guide}`.toLowerCase();
-      return text.includes(search) && (!country || item.country.toLowerCase() === country) && (!category || item.category.toLowerCase() === category) && (!price || item.price <= Number(price));
+      const text = `${item.title} ${item.titleFr} ${item.country} ${item.city} ${item.category} ${item.guide} ${item.languages}`.toLowerCase();
+      return text.includes(search) && (!country || item.country.toLowerCase() === country) && (!category || item.category.toLowerCase() === category) && (!language || item.languages.toLowerCase().includes(language)) && (!price || item.price <= Number(price));
+    }).sort((a, b) => {
+      if (sort === "price") return a.price - b.price;
+      if (sort === "rating") return b.rating - a.rating;
+      if (sort === "premium") return Number(b.sponsored) - Number(a.sponsored) || b.rating - a.rating;
+      return Number(b.sponsored) - Number(a.sponsored) || b.rating - a.rating || a.price - b.price;
     });
     document.getElementById("results").innerHTML = filtered.length ? filtered.map(card).join("") : '<div class="empty-state">No experiences match those filters yet.</div>';
     bindSaveButtons();
@@ -425,6 +452,13 @@ function renderExperience(id) {
         <p>${item.includes.join(" · ")}</p>
         <h3>What's excluded</h3>
         <p class="muted">${item.excludes.join(" · ")}</p>
+        <h3>Guide verification</h3>
+        <div class="trust-grid compact">
+          <article class="trust-card"><strong>${item.guide}</strong><span>Verified bilingual host with local route knowledge in ${item.city}.</span></article>
+          <article class="trust-card"><strong>Safety notes</strong><span>Meeting point, transport assumptions and emergency contact are shared after booking.</span></article>
+          <article class="trust-card"><strong>Cancellation</strong><span>Free cancellation up to 48 hours before the experience.</span></article>
+          <article class="trust-card"><strong>Local value</strong><span>Ivorian guides and operators keep more of the booking value.</span></article>
+        </div>
         <h3>Multi-source trust signals</h3>
         <div class="review-row">
           ${["Google", "TripAdvisor", "Instagram", "Konian"].map((source, index) => `
@@ -609,9 +643,14 @@ function renderBookings() {
             <span class="badge green">${booking.status}</span>
             <h3>${booking.title}</h3>
             <p class="muted">${booking.date} · ${booking.guests} guests · ${booking.code}</p>
+            <div class="trust-row">
+              <span>Guide notified</span>
+              <span>48h cancel</span>
+              <span>Trip notes pending</span>
+            </div>
             <div class="meta"><strong>${money.format(booking.total)}</strong><button class="btn light" data-cancel="${index}">Cancel</button></div>
           </article>
-        `).join("") : '<div class="empty-state">No bookings yet. Choose an experience and confirm a date.</div>'}
+        `).join("") : '<div class="empty-state">No bookings yet. Choose an experience and confirm a date.<br><br><a class="btn light" href="#/discover">Explore experiences</a></div>'}
       </div>
     </section>
   `;
