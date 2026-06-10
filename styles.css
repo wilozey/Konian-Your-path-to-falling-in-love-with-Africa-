@@ -1954,6 +1954,166 @@ textarea {
   background: transparent;
 }
 
+.hero {
+  min-height: min(860px, calc(100svh - 72px));
+  align-items: center;
+  padding: clamp(22px, 5vw, 72px);
+  color: #fffdf8;
+  background:
+    linear-gradient(90deg, rgba(25, 21, 17, 0.78), rgba(82, 49, 26, 0.42) 48%, rgba(255, 253, 248, 0.12)),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.08), rgba(55, 32, 16, 0.5)),
+    url("assets/scenes/zanzibar-beach.jpg") center/cover;
+}
+
+.hero-layout {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.82fr);
+  gap: clamp(22px, 5vw, 64px);
+  align-items: center;
+}
+
+.hero-content {
+  max-width: 680px;
+  padding-bottom: 0;
+}
+
+.hero h1 {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+  overflow: visible;
+  margin: 8px 0 16px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(4rem, 9vw, 8rem);
+  letter-spacing: 0.04em;
+  color: #f8e5c6;
+  text-shadow: 0 18px 46px rgba(32, 20, 10, 0.42);
+}
+
+.hero p {
+  color: rgba(255, 253, 248, 0.9);
+}
+
+.hero-brand-pair {
+  margin-bottom: 14px;
+  background: rgba(255, 253, 248, 0.18);
+  border-color: rgba(248, 229, 198, 0.42);
+}
+
+.hero-brand-pair img {
+  width: clamp(64px, 8vw, 96px);
+  height: clamp(64px, 8vw, 96px);
+}
+
+.hero-destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.hero-destinations span {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid rgba(248, 229, 198, 0.38);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.14);
+  color: #fff4dc;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 520px;
+  isolation: isolate;
+}
+
+.hero-photo,
+.hero-scout-mini {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(248, 229, 198, 0.42);
+  border-radius: 26px;
+  background: rgba(255, 253, 248, 0.18);
+  box-shadow: 0 26px 70px rgba(31, 20, 11, 0.32);
+  backdrop-filter: blur(12px);
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.hero-photo span {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: calc(100% - 28px);
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.58);
+  color: #fffdf8;
+  font-weight: 900;
+  font-size: 0.78rem;
+}
+
+.main-photo {
+  inset: 28px 74px 86px 0;
+  z-index: 1;
+}
+
+.side-photo {
+  top: 0;
+  right: 0;
+  width: 42%;
+  height: 42%;
+  z-index: 2;
+}
+
+.small-photo {
+  right: 18px;
+  bottom: 0;
+  width: 48%;
+  height: 34%;
+  z-index: 3;
+}
+
+.hero-scout-mini {
+  left: 34px;
+  bottom: 28px;
+  z-index: 4;
+  display: grid;
+  gap: 4px;
+  width: min(260px, 58%);
+  padding: 16px 18px;
+  background: linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(240, 222, 194, 0.9));
+  color: #4a2e1c;
+}
+
+.hero-scout-mini strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+}
+
+.hero-scout-mini span {
+  color: #765227;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
 @media (max-width: 820px) {
   body {
     background: linear-gradient(180deg, #fffdf8, #f8f5ef 58%, #efe7d8);
@@ -1999,5 +2159,46 @@ textarea {
 
   .score-row {
     align-items: flex-start;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 20px 16px 26px;
+    background:
+      linear-gradient(180deg, rgba(31, 24, 19, 0.62), rgba(83, 49, 26, 0.42) 54%, rgba(255, 253, 248, 0.1)),
+      url("assets/scenes/zanzibar-beach.jpg") center/cover;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.2rem, 18vw, 5.8rem);
+  }
+
+  .hero-visual {
+    min-height: 330px;
+  }
+
+  .main-photo {
+    inset: 0 74px 54px 0;
+  }
+
+  .side-photo {
+    width: 42%;
+    height: 38%;
+  }
+
+  .small-photo {
+    width: 50%;
+    height: 32%;
+  }
+
+  .hero-scout-mini {
+    left: 14px;
+    bottom: 16px;
+    width: min(240px, 66%);
   }
 }

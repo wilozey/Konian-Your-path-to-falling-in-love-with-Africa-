@@ -440,6 +440,7 @@ function bindSaveButtons() {
 function renderHome() {
   app.innerHTML = `
     <section class="hero">
+      <div class="hero-layout">
       <div class="hero-content">
         <div class="hero-brand-pair" aria-label="Konian logo variations">
           <img src="assets/app-icon-cream.png" alt="Ivory Konian logo">
@@ -454,8 +455,32 @@ function renderHome() {
         </div>
         <div class="hero-actions">
           <a class="btn" href="#/plan">Plan my trip / Planifier</a>
-          <a class="btn secondary" href="#/discover">Explore experiences / Explorer</a>
+          <a class="btn secondary" href="#/scout">Scout beyond Abidjan</a>
         </div>
+        <div class="hero-destinations" aria-label="Featured launch places">
+          <span>Assinie lagoon</span>
+          <span>Grand-Bassam heritage</span>
+          <span>Man highlands</span>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="Konian discovery preview">
+        <div class="hero-photo main-photo">
+          <img src="assets/scenes/zanzibar-beach.jpg" alt="Coastal discovery preview">
+          <span>Grand-Bassam coast</span>
+        </div>
+        <div class="hero-photo side-photo">
+          <img src="assets/scenes/savanna-sunset.jpg" alt="Lagoon sunset preview">
+          <span>Assinie weekend</span>
+        </div>
+        <div class="hero-scout-mini">
+          <strong>Scout score 91</strong>
+          <span>Great value outside Abidjan</span>
+        </div>
+        <div class="hero-photo small-photo">
+          <img src="assets/scenes/okavango-delta.jpg" alt="Highland nature route preview">
+          <span>Man highlands</span>
+        </div>
+      </div>
       </div>
     </section>
     <section class="stats-band" aria-label="Konian platform statistics">
